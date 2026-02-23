@@ -1,0 +1,1426 @@
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+================================================================================
+YELENA v2 — PARAMETER OPTIMIZER
+================================================================================
+Symbols:    ['SPY', 'QQQ', 'TSLA', 'NVDA', 'META', 'NFLX', 'AAPL', 'GOOGL', 'MSFT', 'AMZN', 'AMD']
+Timeframes: ['1min', '5min', '15min', '1hr']
+Indicators: ['qcloud', 'qline']
+Mode:       FULL
+Started:    2026-02-13 20:42:19
+Output:     /home/ubuntu/yelena/optimization_results
+================================================================================
+
+Connecting to PostgreSQL...
+  Connected successfully.
+
+============================================================
+SYMBOL: SPY
+============================================================
+
+  Timeframe: 1min (table=bars_1min, group=scalp)
+  Loading data...
+  Loaded 106,329 bars (2025-08-15 08:00:00+00:00 to 2026-02-11 14:15:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 106,329 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=79.4%, Whipsaw=9.1%, AvgDur=46, Score=0.757
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 106,329 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=18, factor=3.5 | FlipAcc=76.1%, Whipsaw=7.9%, BounceWR=100.0%, Score=0.895
+
+  Timeframe: 5min (table=bars_5min, group=intraday)
+  Loading data...
+  Loaded 92,732 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:50:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 92,732 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=79.7%, Whipsaw=9.6%, AvgDur=48, Score=0.778
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 92,732 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=10, factor=3.5 | FlipAcc=79.3%, Whipsaw=4.1%, BounceWR=100.0%, Score=0.911
+
+  Timeframe: 15min (table=bars_15min, group=intraday)
+  Loading data...
+  Loaded 31,386 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:45:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 31,386 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=81.5%, Whipsaw=8.5%, AvgDur=48, Score=0.820
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 31,386 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=20, factor=2.2 | FlipAcc=79.1%, Whipsaw=14.5%, BounceWR=100.0%, Score=0.777
+
+  Timeframe: 1hr (table=bars_1hr, group=swing)
+  Loading data...
+  Loaded 7,866 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:00:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 7,866 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=79.5%, Whipsaw=12.1%, AvgDur=38, Score=0.877
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 7,866 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=20, factor=3.5 | FlipAcc=80.4%, Whipsaw=1.7%, BounceWR=0.0%, Score=0.777
+
+============================================================
+SYMBOL: QQQ
+============================================================
+
+  Timeframe: 1min (table=bars_1min, group=scalp)
+  Loading data...
+  Loaded 110,527 bars (2025-08-15 08:00:00+00:00 to 2026-02-11 14:15:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 110,527 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=80.7%, Whipsaw=10.6%, AvgDur=46, Score=0.762
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 110,527 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=18, factor=2.5 | FlipAcc=79.1%, Whipsaw=14.7%, BounceWR=100.0%, Score=0.794
+
+  Timeframe: 5min (table=bars_5min, group=intraday)
+  Loading data...
+  Loaded 93,614 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:50:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 93,614 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=78.0%, Whipsaw=11.2%, AvgDur=49, Score=0.782
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 93,614 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=14, factor=3.5 | FlipAcc=79.8%, Whipsaw=4.7%, BounceWR=100.0%, Score=0.916
+
+  Timeframe: 15min (table=bars_15min, group=intraday)
+  Loading data...
+  Loaded 31,380 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:45:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 31,380 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=79.5%, Whipsaw=9.2%, AvgDur=46, Score=0.840
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 31,380 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=14, factor=3.0 | FlipAcc=76.9%, Whipsaw=5.3%, BounceWR=83.3%, Score=0.836
+
+  Timeframe: 1hr (table=bars_1hr, group=swing)
+  Loading data...
+  Loaded 7,851 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:00:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 7,851 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=15, step=1.7, smooth=3 | FlipAcc=79.9%, Whipsaw=11.7%, AvgDur=40, Score=0.890
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 7,851 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=10, factor=2.2 | FlipAcc=77.5%, Whipsaw=7.8%, BounceWR=100.0%, Score=0.783
+
+============================================================
+SYMBOL: TSLA
+============================================================
+
+  Timeframe: 1min (table=bars_1min, group=scalp)
+  Loading data...
+  Loaded 113,856 bars (2025-08-15 08:00:00+00:00 to 2026-02-11 14:16:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 113,856 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=15, step=1.8, smooth=3 | FlipAcc=79.9%, Whipsaw=10.7%, AvgDur=48, Score=0.786
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 113,856 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=10, factor=3.5 | FlipAcc=76.6%, Whipsaw=5.5%, BounceWR=66.7%, Score=0.853
+
+  Timeframe: 5min (table=bars_5min, group=intraday)
+  Loading data...
+  Loaded 94,065 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:50:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 94,065 bars...
+      Progress: 20/132
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=78.0%, Whipsaw=11.1%, AvgDur=50, Score=0.855
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 94,065 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=10, factor=2.8 | FlipAcc=78.2%, Whipsaw=8.1%, BounceWR=100.0%, Score=0.839
+
+  Timeframe: 15min (table=bars_15min, group=intraday)
+  Loading data...
+  Loaded 31,386 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:45:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 31,386 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=77.1%, Whipsaw=10.9%, AvgDur=52, Score=0.883
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 31,386 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=8, factor=3.0 | FlipAcc=75.5%, Whipsaw=7.6%, BounceWR=100.0%, Score=0.847
+
+  Timeframe: 1hr (table=bars_1hr, group=swing)
+  Loading data...
+  Loaded 7,851 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:00:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 7,851 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=81.3%, Whipsaw=10.3%, AvgDur=42, Score=0.909
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 7,851 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=12, factor=3.5 | FlipAcc=79.3%, Whipsaw=0.0%, BounceWR=0.0%, Score=0.775
+
+============================================================
+SYMBOL: NVDA
+============================================================
+
+  Timeframe: 1min (table=bars_1min, group=scalp)
+  Loading data...
+  Loaded 115,882 bars (2025-08-15 08:00:00+00:00 to 2026-02-11 14:16:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 115,882 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=78.0%, Whipsaw=10.7%, AvgDur=47, Score=0.772
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 115,882 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=18, factor=3.5 | FlipAcc=76.3%, Whipsaw=5.3%, BounceWR=100.0%, Score=0.902
+
+  Timeframe: 5min (table=bars_5min, group=intraday)
+  Loading data...
+  Loaded 93,906 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:50:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 93,906 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=79.2%, Whipsaw=9.2%, AvgDur=52, Score=0.852
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 93,906 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=10, factor=3.5 | FlipAcc=77.2%, Whipsaw=3.8%, BounceWR=100.0%, Score=0.908
+
+  Timeframe: 15min (table=bars_15min, group=intraday)
+  Loading data...
+  Loaded 31,378 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:45:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 31,378 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.6, smooth=3 | FlipAcc=78.6%, Whipsaw=8.7%, AvgDur=46, Score=0.880
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 31,378 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=18, factor=2.5 | FlipAcc=77.7%, Whipsaw=9.0%, BounceWR=66.7%, Score=0.755
+
+  Timeframe: 1hr (table=bars_1hr, group=swing)
+  Loading data...
+  Loaded 7,851 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:00:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 7,851 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=15, step=1.6, smooth=3 | FlipAcc=88.5%, Whipsaw=3.6%, AvgDur=40, Score=0.927
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 7,851 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=16, factor=3.5 | FlipAcc=81.7%, Whipsaw=0.6%, BounceWR=100.0%, Score=0.934
+
+============================================================
+SYMBOL: META
+============================================================
+
+  Timeframe: 1min (table=bars_1min, group=scalp)
+  Loading data...
+  Loaded 83,560 bars (2025-08-15 08:19:00+00:00 to 2026-02-11 14:16:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 83,560 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=77.4%, Whipsaw=10.2%, AvgDur=47, Score=0.769
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 83,560 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=12, factor=3.5 | FlipAcc=74.1%, Whipsaw=10.0%, BounceWR=100.0%, Score=0.880
+
+  Timeframe: 5min (table=bars_5min, group=intraday)
+  Loading data...
+  Loaded 80,536 bars (2024-02-26 09:40:00+00:00 to 2026-02-13 17:50:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 80,536 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=79.3%, Whipsaw=8.7%, AvgDur=51, Score=0.841
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 80,536 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=12, factor=3.5 | FlipAcc=75.9%, Whipsaw=9.7%, BounceWR=66.7%, Score=0.839
+
+  Timeframe: 15min (table=bars_15min, group=intraday)
+  Loading data...
+  Loaded 29,938 bars (2024-02-26 09:30:00+00:00 to 2026-02-13 17:45:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 29,938 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=80.4%, Whipsaw=8.7%, AvgDur=51, Score=0.882
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 29,938 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=14, factor=2.8 | FlipAcc=77.7%, Whipsaw=10.7%, BounceWR=100.0%, Score=0.828
+
+  Timeframe: 1hr (table=bars_1hr, group=swing)
+  Loading data...
+  Loaded 7,823 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:00:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 7,823 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=15, step=1.8, smooth=3 | FlipAcc=83.2%, Whipsaw=12.1%, AvgDur=49, Score=0.907
+
+  --- QLine Optimization ---
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+    Testing 56 QLine parameter combinations on 7,823 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=20, factor=3.5 | FlipAcc=79.3%, Whipsaw=2.9%, BounceWR=66.7%, Score=0.867
+
+============================================================
+SYMBOL: NFLX
+============================================================
+
+  Timeframe: 1min (table=bars_1min, group=scalp)
+  Loading data...
+  Loaded 84,611 bars (2025-08-15 08:01:00+00:00 to 2026-02-11 14:16:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 84,611 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=76.5%, Whipsaw=11.0%, AvgDur=46, Score=0.763
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 84,611 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=10, factor=3.0 | FlipAcc=73.0%, Whipsaw=9.3%, BounceWR=100.0%, Score=0.824
+
+  Timeframe: 5min (table=bars_5min, group=intraday)
+  Loading data...
+  Loaded 60,681 bars (2024-02-26 12:10:00+00:00 to 2026-02-13 17:50:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 60,681 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=79.9%, Whipsaw=8.1%, AvgDur=48, Score=0.857
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 60,681 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=14, factor=3.5 | FlipAcc=75.3%, Whipsaw=8.8%, BounceWR=100.0%, Score=0.887
+
+  Timeframe: 15min (table=bars_15min, group=intraday)
+  Loading data...
+  Loaded 23,713 bars (2024-02-26 12:00:00+00:00 to 2026-02-13 17:45:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 23,713 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=78.0%, Whipsaw=9.4%, AvgDur=48, Score=0.878
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 23,713 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=12, factor=3.0 | FlipAcc=74.9%, Whipsaw=9.4%, BounceWR=100.0%, Score=0.826
+
+  Timeframe: 1hr (table=bars_1hr, group=swing)
+  Loading data...
+  Loaded 7,033 bars (2024-02-26 12:00:00+00:00 to 2026-02-13 17:00:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 7,033 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=15, step=1.8, smooth=3 | FlipAcc=81.6%, Whipsaw=6.4%, AvgDur=49, Score=0.920
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 7,033 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=10, factor=3.5 | FlipAcc=76.7%, Whipsaw=2.2%, BounceWR=100.0%, Score=0.898
+
+============================================================
+SYMBOL: AAPL
+============================================================
+
+  Timeframe: 1min (table=bars_1min, group=scalp)
+  Loading data...
+  Loaded 87,876 bars (2025-08-15 08:00:00+00:00 to 2026-02-11 14:16:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 87,876 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=76.7%, Whipsaw=9.1%, AvgDur=45, Score=0.762
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 87,876 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=20, factor=3.5 | FlipAcc=72.9%, Whipsaw=11.5%, BounceWR=100.0%, Score=0.876
+
+  Timeframe: 5min (table=bars_5min, group=intraday)
+  Loading data...
+  Loaded 90,747 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:50:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 90,747 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=79.2%, Whipsaw=9.8%, AvgDur=49, Score=0.811
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 90,747 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=10, factor=3.5 | FlipAcc=76.1%, Whipsaw=6.6%, BounceWR=100.0%, Score=0.894
+
+  Timeframe: 15min (table=bars_15min, group=intraday)
+  Loading data...
+  Loaded 31,280 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:45:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 31,280 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=81.3%, Whipsaw=8.2%, AvgDur=48, Score=0.869
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 31,280 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=8, factor=2.5 | FlipAcc=74.5%, Whipsaw=12.1%, BounceWR=100.0%, Score=0.774
+
+  Timeframe: 1hr (table=bars_1hr, group=swing)
+  Loading data...
+  Loaded 7,851 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:00:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 7,851 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=80.5%, Whipsaw=12.1%, AvgDur=50, Score=0.900
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 7,851 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=16, factor=2.8 | FlipAcc=73.4%, Whipsaw=3.6%, BounceWR=100.0%, Score=0.833
+
+============================================================
+SYMBOL: GOOGL
+============================================================
+
+  Timeframe: 1min (table=bars_1min, group=scalp)
+  Loading data...
+  Loaded 88,012 bars (2025-08-15 08:00:00+00:00 to 2026-02-11 14:16:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 88,012 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=80.8%, Whipsaw=10.1%, AvgDur=48, Score=0.786
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 88,012 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=12, factor=3.0 | FlipAcc=74.0%, Whipsaw=14.3%, BounceWR=100.0%, Score=0.817
+
+  Timeframe: 5min (table=bars_5min, group=intraday)
+  Loading data...
+  Loaded 87,257 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:50:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 87,257 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=80.0%, Whipsaw=10.0%, AvgDur=49, Score=0.827
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 87,257 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=10, factor=3.5 | FlipAcc=75.2%, Whipsaw=8.0%, BounceWR=66.7%, Score=0.835
+
+  Timeframe: 15min (table=bars_15min, group=intraday)
+  Loading data...
+  Loaded 31,004 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:45:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 31,004 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=79.0%, Whipsaw=9.5%, AvgDur=47, Score=0.875
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 31,004 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=16, factor=3.5 | FlipAcc=75.3%, Whipsaw=9.0%, BounceWR=50.0%, Score=0.813
+
+  Timeframe: 1hr (table=bars_1hr, group=swing)
+  Loading data...
+  Loaded 7,850 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:00:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 7,850 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=15, step=1.8, smooth=3 | FlipAcc=76.4%, Whipsaw=7.6%, AvgDur=45, Score=0.893
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 7,850 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=14, factor=2.5 | FlipAcc=79.9%, Whipsaw=4.1%, BounceWR=100.0%, Score=0.836
+
+============================================================
+SYMBOL: MSFT
+============================================================
+
+  Timeframe: 1min (table=bars_1min, group=scalp)
+  Loading data...
+  Loaded 84,428 bars (2025-08-15 08:00:00+00:00 to 2026-02-11 14:17:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 84,428 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=80.5%, Whipsaw=10.2%, AvgDur=48, Score=0.772
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 84,428 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=18, factor=3.5 | FlipAcc=74.6%, Whipsaw=11.0%, BounceWR=100.0%, Score=0.883
+
+  Timeframe: 5min (table=bars_5min, group=intraday)
+  Loading data...
+  Loaded 82,226 bars (2024-02-26 09:25:00+00:00 to 2026-02-13 17:50:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 82,226 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=78.4%, Whipsaw=10.3%, AvgDur=46, Score=0.804
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 82,226 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=14, factor=3.5 | FlipAcc=72.7%, Whipsaw=9.5%, BounceWR=100.0%, Score=0.874
+
+  Timeframe: 15min (table=bars_15min, group=intraday)
+  Loading data...
+  Loaded 30,438 bars (2024-02-26 09:15:00+00:00 to 2026-02-13 17:45:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 30,438 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=15, step=1.8, smooth=3 | FlipAcc=81.5%, Whipsaw=9.3%, AvgDur=48, Score=0.854
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 30,438 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=16, factor=2.5 | FlipAcc=75.9%, Whipsaw=13.6%, BounceWR=100.0%, Score=0.780
+
+  Timeframe: 1hr (table=bars_1hr, group=swing)
+  Loading data...
+  Loaded 7,850 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:00:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 7,850 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=15, step=1.8, smooth=3 | FlipAcc=78.5%, Whipsaw=11.2%, AvgDur=48, Score=0.885
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 7,850 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=8, factor=3.5 | FlipAcc=79.5%, Whipsaw=3.0%, BounceWR=66.7%, Score=0.861
+
+============================================================
+SYMBOL: AMZN
+============================================================
+
+  Timeframe: 1min (table=bars_1min, group=scalp)
+  Loading data...
+  Loaded 93,732 bars (2025-08-15 08:00:00+00:00 to 2026-02-11 14:17:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 93,732 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=15, step=1.8, smooth=3 | FlipAcc=77.6%, Whipsaw=9.6%, AvgDur=45, Score=0.770
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 93,732 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=12, factor=3.0 | FlipAcc=72.6%, Whipsaw=12.1%, BounceWR=100.0%, Score=0.818
+
+  Timeframe: 5min (table=bars_5min, group=intraday)
+  Loading data...
+  Loaded 90,357 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:50:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 90,357 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=80.3%, Whipsaw=10.8%, AvgDur=50, Score=0.824
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 90,357 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=8, factor=3.5 | FlipAcc=75.2%, Whipsaw=6.3%, BounceWR=100.0%, Score=0.891
+
+  Timeframe: 15min (table=bars_15min, group=intraday)
+  Loading data...
+  Loaded 31,250 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:45:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 31,250 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=79.4%, Whipsaw=10.6%, AvgDur=48, Score=0.870
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 31,250 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=14, factor=3.0 | FlipAcc=76.7%, Whipsaw=9.5%, BounceWR=100.0%, Score=0.839
+
+  Timeframe: 1hr (table=bars_1hr, group=swing)
+  Loading data...
+  Loaded 7,851 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:00:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 7,851 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=15, step=1.7, smooth=3 | FlipAcc=84.4%, Whipsaw=7.9%, AvgDur=47, Score=0.916
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 7,851 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=8, factor=2.2 | FlipAcc=79.3%, Whipsaw=10.2%, BounceWR=100.0%, Score=0.792
+
+============================================================
+SYMBOL: AMD
+============================================================
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+/home/ubuntu/yelena/backend/scripts/optimize_params.py:158: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=(symbol,))
+
+  Timeframe: 1min (table=bars_1min, group=scalp)
+  Loading data...
+  Loaded 100,013 bars (2025-08-15 08:00:00+00:00 to 2026-02-11 14:17:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 100,013 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=77.2%, Whipsaw=11.0%, AvgDur=49, Score=0.792
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 100,013 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=10, factor=3.5 | FlipAcc=74.0%, Whipsaw=8.2%, BounceWR=0.0%, Score=0.736
+
+  Timeframe: 5min (table=bars_5min, group=intraday)
+  Loading data...
+  Loaded 91,982 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:50:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 91,982 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.8, smooth=3 | FlipAcc=79.3%, Whipsaw=9.2%, AvgDur=53, Score=0.861
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 91,982 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=8, factor=3.5 | FlipAcc=75.4%, Whipsaw=6.4%, BounceWR=100.0%, Score=0.897
+
+  Timeframe: 15min (table=bars_15min, group=intraday)
+  Loading data...
+  Loaded 31,318 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:45:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 31,318 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=15, step=1.8, smooth=3 | FlipAcc=78.5%, Whipsaw=8.2%, AvgDur=53, Score=0.890
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 31,318 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=18, factor=2.8 | FlipAcc=77.4%, Whipsaw=9.8%, BounceWR=100.0%, Score=0.833
+
+  Timeframe: 1hr (table=bars_1hr, group=swing)
+  Loading data...
+  Loaded 7,851 bars (2024-02-26 09:00:00+00:00 to 2026-02-13 17:00:00+00:00)
+
+  --- QCloud Optimization ---
+    Testing 132 QCloud parameter combinations on 7,851 bars...
+      Progress: 20/132
+      Progress: 40/132
+      Progress: 60/132
+      Progress: 80/132
+      Progress: 100/132
+      Progress: 120/132
+    BEST: base=16, step=1.7, smooth=3 | FlipAcc=77.8%, Whipsaw=7.9%, AvgDur=47, Score=0.890
+
+  --- QLine Optimization ---
+    Testing 56 QLine parameter combinations on 7,851 bars...
+      Progress: 10/56
+      Progress: 20/56
+      Progress: 30/56
+      Progress: 40/56
+      Progress: 50/56
+    BEST: atr=14, factor=3.5 | FlipAcc=76.6%, Whipsaw=1.8%, BounceWR=100.0%, Score=0.904
+
+================================================================================
+SAVING RESULTS
+================================================================================
+  Saved: qcloud_best_params.json
+  Saved: qline_best_params.json
+  Saved: pine_qcloud_lookup.pine
+  Saved: pine_qline_lookup.pine
+
+================================================================================
+OPTIMIZATION REPORT
+================================================================================
+Completed in 3643 seconds (60.7 minutes)
+Results saved to: /home/ubuntu/yelena/optimization_results
+
+──────────────────────────────────────────────────────────────────────
+QCLOUD — BEST PARAMETERS PER SYMBOL/TIMEFRAME
+──────────────────────────────────────────────────────────────────────
+Symbol    TF       Base    Step    Smooth  FlipAcc    Whipsaw      AvgDur    Score    Flips    Bars
+--------  -----  ------  ------  --------  ---------  ---------  --------  -------  -------  ------
+SPY       1min       16     1.8         3  79.4%      9.1%             46    0.757     2286  106329
+SPY       5min       16     1.8         3  79.7%      9.6%             48    0.778     1946   92732
+SPY       15min      16     1.8         3  81.5%      8.5%             48    0.82       659   31386
+SPY       1hr        16     1.8         3  79.5%      12.1%            38    0.877      207    7866
+QQQ       1min       16     1.8         3  80.7%      10.6%            46    0.762     2388  110527
+QQQ       5min       16     1.8         3  78.0%      11.2%            49    0.782     1930   93614
+QQQ       15min      16     1.8         3  79.5%      9.2%             46    0.84       675   31380
+QQQ       1hr        15     1.7         3  79.9%      11.7%            40    0.89       197    7851
+TSLA      1min       15     1.8         3  79.9%      10.7%            48    0.786     2382  113856
+TSLA      5min       16     1.8         3  78.0%      11.1%            50    0.855     1872   94065
+TSLA      15min      16     1.8         3  77.1%      10.9%            52    0.883      607   31386
+TSLA      1hr        16     1.8         3  81.3%      10.3%            42    0.909      185    7851
+NVDA      1min       16     1.8         3  78.0%      10.7%            47    0.772     2448  115882
+NVDA      5min       16     1.8         3  79.2%      9.2%             52    0.852     1801   93906
+NVDA      15min      16     1.6         3  78.6%      8.7%             46    0.88       675   31378
+NVDA      1hr        15     1.6         3  88.5%      3.6%             40    0.927      195    7851
+META      1min       16     1.8         3  77.4%      10.2%            47    0.769     1768   83560
+META      5min       16     1.8         3  79.3%      8.7%             51    0.841     1577   80536
+META      15min      16     1.8         3  80.4%      8.7%             51    0.882      587   29938
+META      1hr        15     1.8         3  83.2%      12.1%            49    0.907      157    7823
+NFLX      1min       16     1.8         3  76.5%      11.0%            46    0.763     1838   84611
+NFLX      5min       16     1.8         3  79.9%      8.1%             48    0.857     1270   60681
+NFLX      15min      16     1.8         3  78.0%      9.4%             48    0.878      487   23713
+NFLX      1hr        15     1.8         3  81.6%      6.4%             49    0.92       141    7033
+AAPL      1min       16     1.8         3  76.7%      9.1%             45    0.762     1950   87876
+AAPL      5min       16     1.8         3  79.2%      9.8%             49    0.811     1863   90747
+AAPL      15min      16     1.8         3  81.3%      8.2%             48    0.869      649   31280
+AAPL      1hr        16     1.8         3  80.5%      12.1%            50    0.9        157    7851
+GOOGL     1min       16     1.8         3  80.8%      10.1%            48    0.786     1818   88012
+GOOGL     5min       16     1.8         3  80.0%      10.0%            49    0.827     1767   87257
+GOOGL     15min      16     1.8         3  79.0%      9.5%             47    0.875      651   31004
+GOOGL     1hr        15     1.8         3  76.4%      7.6%             45    0.893      171    7850
+MSFT      1min       16     1.8         3  80.5%      10.2%            48    0.772     1774   84428
+MSFT      5min       16     1.8         3  78.4%      10.3%            46    0.804     1790   82226
+MSFT      15min      15     1.8         3  81.5%      9.3%             48    0.854      637   30438
+MSFT      1hr        15     1.8         3  78.5%      11.2%            48    0.885      161    7850
+AMZN      1min       15     1.8         3  77.6%      9.6%             45    0.77      2098   93732
+AMZN      5min       16     1.8         3  80.3%      10.8%            50    0.824     1794   90357
+AMZN      15min      16     1.8         3  79.4%      10.6%            48    0.87       635   31250
+AMZN      1hr        15     1.7         3  84.4%      7.9%             47    0.916      165    7851
+AMD       1min       16     1.8         3  77.2%      11.0%            49    0.792     2032  100013
+AMD       5min       16     1.8         3  79.3%      9.2%             53    0.861     1726   91982
+AMD       15min      15     1.8         3  78.5%      8.2%             53    0.89       595   31318
+AMD       1hr        16     1.7         3  77.8%      7.9%             47    0.89       165    7851
+
+──────────────────────────────────────────────────────────────────────
+QLINE — BEST PARAMETERS PER SYMBOL/TIMEFRAME
+──────────────────────────────────────────────────────────────────────
+Symbol    TF       ATR    Factor  FlipAcc    Whipsaw    BounceWR      AvgDur    Score    Flips    Bars
+--------  -----  -----  --------  ---------  ---------  ----------  --------  -------  -------  ------
+SPY       1min      18       3.5  76.1%      7.9%       100.0%            35    0.895     3043  106329
+SPY       5min      10       3.5  79.3%      4.1%       100.0%            42    0.911     2185   92732
+SPY       15min     20       2.2  79.1%      14.5%      100.0%            24    0.777     1279   31386
+SPY       1hr       20       3.5  80.4%      1.7%       0.0%              44    0.777      180    7866
+QQQ       1min      18       2.5  79.1%      14.7%      100.0%            22    0.794     4921  110527
+QQQ       5min      14       3.5  79.8%      4.7%       100.0%            45    0.916     2091   93614
+QQQ       15min     14       3    76.9%      5.3%       83.3%             36    0.836      861   31380
+QQQ       1hr       10       2.2  77.5%      7.8%       100.0%            24    0.783      321    7851
+TSLA      1min      10       3.5  76.6%      5.5%       66.7%             43    0.853     2667  113856
+TSLA      5min      10       2.8  78.2%      8.1%       100.0%            37    0.839     2567   94065
+TSLA      15min      8       3    75.5%      7.6%       100.0%            37    0.847      845   31386
+TSLA      1hr       12       3.5  79.3%      0.0%       0.0%              44    0.775      174    7851
+NVDA      1min      18       3.5  76.3%      5.3%       100.0%            44    0.902     2629  115882
+NVDA      5min      10       3.5  77.2%      3.8%       100.0%            52    0.908     1796   93906
+NVDA      15min     18       2.5  77.7%      9.0%       66.7%             32    0.755      986   31378
+NVDA      1hr       16       3.5  81.7%      0.6%       100.0%            48    0.934      164    7851
+META      1min      12       3.5  74.1%      10.0%      100.0%            35    0.88      2369   83560
+META      5min      12       3.5  75.9%      9.7%       66.7%             39    0.839     2075   80536
+META      15min     14       2.8  77.7%      10.7%      100.0%            32    0.828      945   29938
+META      1hr       20       3.5  79.3%      2.9%       66.7%             45    0.867      172    7823
+NFLX      1min      10       3    73.0%      9.3%       100.0%            31    0.824     2712   84611
+NFLX      5min      14       3.5  75.3%      8.8%       100.0%            39    0.887     1573   60681
+NFLX      15min     12       3    74.9%      9.4%       100.0%            33    0.826      725   23713
+NFLX      1hr       10       3.5  76.7%      2.2%       100.0%            38    0.898      186    7033
+AAPL      1min      20       3.5  72.9%      11.5%      100.0%            35    0.876     2484   87876
+AAPL      5min      10       3.5  76.1%      6.6%       100.0%            42    0.894     2180   90747
+AAPL      15min      8       2.5  74.5%      12.1%      100.0%            27    0.774     1160   31280
+AAPL      1hr       16       2.8  73.4%      3.6%       100.0%            40    0.833      194    7851
+GOOGL     1min      12       3    74.0%      14.3%      100.0%            26    0.817     3366   88012
+GOOGL     5min      10       3.5  75.2%      8.0%       66.7%             39    0.835     2252   87257
+GOOGL     15min     16       3.5  75.3%      9.0%       50.0%             44    0.813      702   31004
+GOOGL     1hr       14       2.5  79.9%      4.1%       100.0%            32    0.836      244    7850
+MSFT      1min      18       3.5  74.6%      11.0%      100.0%            35    0.883     2390   84428
+MSFT      5min      14       3.5  72.7%      9.5%       100.0%            36    0.874     2260   82226
+MSFT      15min     16       2.5  75.9%      13.6%      100.0%            26    0.78      1188   30438
+MSFT      1hr        8       3.5  79.5%      3.0%       66.7%             48    0.861      164    7850
+AMZN      1min      12       3    72.6%      12.1%      100.0%            28    0.818     3334   93732
+AMZN      5min       8       3.5  75.2%      6.3%       100.0%            42    0.891     2161   90357
+AMZN      15min     14       3    76.7%      9.5%       100.0%            37    0.839      845   31250
+AMZN      1hr        8       2.2  79.3%      10.2%      100.0%            26    0.792      304    7851
+AMD       1min      10       3.5  74.0%      8.2%       0.0%              39    0.736     2565  100013
+AMD       5min       8       3.5  75.4%      6.4%       100.0%            46    0.897     2012   91982
+AMD       15min     18       2.8  77.4%      9.8%       100.0%            35    0.833      892   31318
+AMD       1hr       14       3.5  76.6%      1.8%       100.0%            48    0.904      164    7851
+
+================================================================================
+PINE SCRIPT — QCLOUD AUTO-OPTIMIZATION LOOKUP (copy-paste ready)
+================================================================================
+// ==================== AUTO-OPTIMIZATION LOOKUP TABLES ====================
+// Generated by optimize_params.py on 2026-02-13 21:43:02
+// These values are REAL optimized results from backtesting against historical data.
+// DO NOT manually edit — re-run the optimizer to update.
+
+f_auto_base_length() =>
+    string t = syminfo.ticker
+    if t == "SPY"
+        tf_group == "scalp" ? 16 : tf_group == "intraday" ? 16 : 16
+    else if t == "QQQ"
+        tf_group == "scalp" ? 16 : tf_group == "intraday" ? 16 : 15
+    else if t == "TSLA"
+        tf_group == "scalp" ? 15 : tf_group == "intraday" ? 16 : 16
+    else if t == "NVDA"
+        tf_group == "scalp" ? 16 : tf_group == "intraday" ? 16 : 15
+    else if t == "META"
+        tf_group == "scalp" ? 16 : tf_group == "intraday" ? 16 : 15
+    else if t == "NFLX"
+        tf_group == "scalp" ? 16 : tf_group == "intraday" ? 16 : 15
+    else if t == "AAPL"
+        tf_group == "scalp" ? 16 : tf_group == "intraday" ? 16 : 16
+    else if t == "GOOGL"
+        tf_group == "scalp" ? 16 : tf_group == "intraday" ? 16 : 15
+    else if t == "MSFT"
+        tf_group == "scalp" ? 16 : tf_group == "intraday" ? 15 : 15
+    else if t == "AMZN"
+        tf_group == "scalp" ? 15 : tf_group == "intraday" ? 16 : 15
+    else if t == "AMD"
+        tf_group == "scalp" ? 16 : tf_group == "intraday" ? 15 : 16
+    else
+        tf_group == "scalp" ? 10 : tf_group == "intraday" ? 10 : 14
+
+f_auto_step_mult() =>
+    string t = syminfo.ticker
+    if t == "SPY"
+        tf_group == "scalp" ? 1.8 : tf_group == "intraday" ? 1.8 : 1.8
+    else if t == "QQQ"
+        tf_group == "scalp" ? 1.8 : tf_group == "intraday" ? 1.8 : 1.7
+    else if t == "TSLA"
+        tf_group == "scalp" ? 1.8 : tf_group == "intraday" ? 1.8 : 1.8
+    else if t == "NVDA"
+        tf_group == "scalp" ? 1.8 : tf_group == "intraday" ? 1.6 : 1.6
+    else if t == "META"
+        tf_group == "scalp" ? 1.8 : tf_group == "intraday" ? 1.8 : 1.8
+    else if t == "NFLX"
+        tf_group == "scalp" ? 1.8 : tf_group == "intraday" ? 1.8 : 1.8
+    else if t == "AAPL"
+        tf_group == "scalp" ? 1.8 : tf_group == "intraday" ? 1.8 : 1.8
+    else if t == "GOOGL"
+        tf_group == "scalp" ? 1.8 : tf_group == "intraday" ? 1.8 : 1.8
+    else if t == "MSFT"
+        tf_group == "scalp" ? 1.8 : tf_group == "intraday" ? 1.8 : 1.8
+    else if t == "AMZN"
+        tf_group == "scalp" ? 1.8 : tf_group == "intraday" ? 1.8 : 1.7
+    else if t == "AMD"
+        tf_group == "scalp" ? 1.8 : tf_group == "intraday" ? 1.8 : 1.7
+    else
+        tf_group == "scalp" ? 1.5 : tf_group == "intraday" ? 1.5 : 1.5
+
+f_auto_smoothing() =>
+    string t = syminfo.ticker
+    if t == "SPY"
+        tf_group == "scalp" ? 3 : tf_group == "intraday" ? 3 : 3
+    else if t == "QQQ"
+        tf_group == "scalp" ? 3 : tf_group == "intraday" ? 3 : 3
+    else if t == "TSLA"
+        tf_group == "scalp" ? 3 : tf_group == "intraday" ? 3 : 3
+    else if t == "NVDA"
+        tf_group == "scalp" ? 3 : tf_group == "intraday" ? 3 : 3
+    else if t == "META"
+        tf_group == "scalp" ? 3 : tf_group == "intraday" ? 3 : 3
+    else if t == "NFLX"
+        tf_group == "scalp" ? 3 : tf_group == "intraday" ? 3 : 3
+    else if t == "AAPL"
+        tf_group == "scalp" ? 3 : tf_group == "intraday" ? 3 : 3
+    else if t == "GOOGL"
+        tf_group == "scalp" ? 3 : tf_group == "intraday" ? 3 : 3
+    else if t == "MSFT"
+        tf_group == "scalp" ? 3 : tf_group == "intraday" ? 3 : 3
+    else if t == "AMZN"
+        tf_group == "scalp" ? 3 : tf_group == "intraday" ? 3 : 3
+    else if t == "AMD"
+        tf_group == "scalp" ? 3 : tf_group == "intraday" ? 3 : 3
+    else
+        tf_group == "scalp" ? 2 : tf_group == "intraday" ? 2 : 3
+
+================================================================================
+PINE SCRIPT — QLINE AUTO-OPTIMIZATION LOOKUP (copy-paste ready)
+================================================================================
+// ==================== AUTO-OPTIMIZATION LOOKUP TABLES ====================
+// Generated by optimize_params.py on 2026-02-13 21:43:02
+// These values are REAL optimized results from backtesting against historical data.
+// DO NOT manually edit — re-run the optimizer to update.
+
+f_auto_atr_length() =>
+    string t = syminfo.ticker
+    if t == "SPY"
+        tf_group == "scalp" ? 18 : tf_group == "intraday" ? 10 : 20
+    else if t == "QQQ"
+        tf_group == "scalp" ? 18 : tf_group == "intraday" ? 14 : 10
+    else if t == "TSLA"
+        tf_group == "scalp" ? 10 : tf_group == "intraday" ? 8 : 12
+    else if t == "NVDA"
+        tf_group == "scalp" ? 18 : tf_group == "intraday" ? 10 : 16
+    else if t == "META"
+        tf_group == "scalp" ? 12 : tf_group == "intraday" ? 12 : 20
+    else if t == "NFLX"
+        tf_group == "scalp" ? 10 : tf_group == "intraday" ? 14 : 10
+    else if t == "AAPL"
+        tf_group == "scalp" ? 20 : tf_group == "intraday" ? 10 : 16
+    else if t == "GOOGL"
+        tf_group == "scalp" ? 12 : tf_group == "intraday" ? 10 : 14
+    else if t == "MSFT"
+        tf_group == "scalp" ? 18 : tf_group == "intraday" ? 14 : 8
+    else if t == "AMZN"
+        tf_group == "scalp" ? 12 : tf_group == "intraday" ? 8 : 8
+    else if t == "AMD"
+        tf_group == "scalp" ? 10 : tf_group == "intraday" ? 8 : 14
+    else
+        tf_group == "scalp" ? 14 : tf_group == "intraday" ? 14 : 16
+
+f_auto_factor() =>
+    string t = syminfo.ticker
+    if t == "SPY"
+        tf_group == "scalp" ? 3.5 : tf_group == "intraday" ? 3.5 : 3.5
+    else if t == "QQQ"
+        tf_group == "scalp" ? 2.5 : tf_group == "intraday" ? 3.5 : 2.2
+    else if t == "TSLA"
+        tf_group == "scalp" ? 3.5 : tf_group == "intraday" ? 3.0 : 3.5
+    else if t == "NVDA"
+        tf_group == "scalp" ? 3.5 : tf_group == "intraday" ? 3.5 : 3.5
+    else if t == "META"
+        tf_group == "scalp" ? 3.5 : tf_group == "intraday" ? 3.5 : 3.5
+    else if t == "NFLX"
+        tf_group == "scalp" ? 3.0 : tf_group == "intraday" ? 3.5 : 3.5
+    else if t == "AAPL"
+        tf_group == "scalp" ? 3.5 : tf_group == "intraday" ? 3.5 : 2.8
+    else if t == "GOOGL"
+        tf_group == "scalp" ? 3.0 : tf_group == "intraday" ? 3.5 : 2.5
+    else if t == "MSFT"
+        tf_group == "scalp" ? 3.5 : tf_group == "intraday" ? 3.5 : 3.5
+    else if t == "AMZN"
+        tf_group == "scalp" ? 3.0 : tf_group == "intraday" ? 3.5 : 2.2
+    else if t == "AMD"
+        tf_group == "scalp" ? 3.5 : tf_group == "intraday" ? 3.5 : 3.5
+    else
+        tf_group == "scalp" ? 2.0 : tf_group == "intraday" ? 2.0 : 2.5
+
+================================================================================
+OPTIMIZATION COMPLETE
+================================================================================

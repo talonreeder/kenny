@@ -1,0 +1,609 @@
+// ═══════════════════════════════════════════════════════════════════════════════
+// YELENA v2: Master Confluence — The Brain
+// ═══════════════════════════════════════════════════════════════════════════════
+// Version:    2.0
+// Category:   Signal Aggregation (overlay)
+// Purpose:    THE PRIMARY TRADING INDICATOR. Aggregates all 9 sub-indicators
+//             into scored, graded CALL/PUT signals with entry, SL, and 3-tier TP.
+//             This is the ONLY indicator that needs active monitoring.
+//
+// Architecture:
+//   Reads hidden plot exports (X_ prefixed) from all 9 sub-indicators via
+//   input.source(). All sub-indicators MUST be on the same chart.
+//   Master Confluence does NOT recalculate any indicator logic.
+//
+// Scoring: -10.0 (max bearish) to +10.0 (max bullish)
+// Grading: A+ (±8-10), A (±6-7.9), B+ (±4-5.9), B (±0-3.9)
+// Alerts:  Only A and A+ grades fire webhooks — high conviction only.
+// ═══════════════════════════════════════════════════════════════════════════════
+
+//@version=6
+indicator("YELENA v2: Master Confluence", overlay=true, max_lines_count=500, max_labels_count=500)
+
+
+// ╔═══════════════════════════════════════════════════════════════════════════╗
+// ║  SECTION 1: INPUT SOURCES — Wired to Sub-Indicator Hidden Plots         ║
+// ╚═══════════════════════════════════════════════════════════════════════════╝
+// Wire each source to the corresponding X_ plot from its sub-indicator.
+// One-time setup per chart. Uses reduced source mode (~25 critical exports).
+
+// ── QCloud (3 sources) ──
+float src_qcloud_bull_count = input.source(close, "Bull Count (X_BullCount)",           group="🔗 QCloud")
+float src_qcloud_direction  = input.source(close, "Direction (X_Direction)",             group="🔗 QCloud")
+float src_qcloud_is_squeeze = input.source(close, "Squeeze (X_IsSqueeze)",              group="🔗 QCloud")
+
+// ── QLine (3 sources) ──
+float src_qline_trend       = input.source(close, "Trend (X_Trend)",                    group="🔗 QLine")
+float src_qline_bounce      = input.source(close, "Bounce Score (X_BounceScore)",       group="🔗 QLine")
+float src_qline_extended    = input.source(close, "Extended (X_IsExtended)",             group="🔗 QLine")
+
+// ── QWave (2 sources) ──
+float src_qwave_score       = input.source(close, "Wave Score (X_QWaveScore)",          group="🔗 QWave")
+float src_qwave_trending    = input.source(close, "ADX (X_QWaveADX)",                   group="🔗 QWave")
+
+// ── QBands (2 sources) ──
+float src_qbands_position   = input.source(close, "Band Position (X_QBandsPosition)",   group="🔗 QBands")
+float src_qbands_sq_fire    = input.source(close, "Squeeze Fire (X_QBandsFire)",        group="🔗 QBands")
+
+// ── Moneyball (2 sources) ──
+float src_mb_value          = input.source(close, "Value (X_MoneyballValue)",            group="🔗 Moneyball")
+float src_mb_zone           = input.source(close, "Zone (X_MoneyballZone)",              group="🔗 Moneyball")
+
+// ── QMomentum (2 sources) ──
+float src_qmom_rsi          = input.source(close, "RSI (X_QMomentumRSI)",               group="🔗 QMomentum")
+float src_qmom_div          = input.source(close, "Divergence (X_QMomentumDiv)",         group="🔗 QMomentum")
+
+// ── QCVD (2 sources) ──
+float src_qcvd_trend        = input.source(close, "Trend (X_QCVDTrend)",                group="🔗 QCVD")
+float src_qcvd_spike        = input.source(close, "Spike (X_QCVDSpike)",                group="🔗 QCVD")
+
+// ── QSMC (3 sources) ──
+float src_qsmc_structure    = input.source(close, "Structure (X_QSMCStructure)",         group="🔗 QSMC")
+float src_qsmc_bos          = input.source(close, "BOS (X_QSMCBOS)",                    group="🔗 QSMC")
+float src_qsmc_choch        = input.source(close, "CHoCH (X_QSMCCHoCH)",                group="🔗 QSMC")
+
+// ── QGrid (3 sources) ──
+float src_qgrid_vwap_side   = input.source(close, "VWAP Side (X_QGridVWAPSide)",        group="🔗 QGrid")
+float src_qgrid_resistance  = input.source(close, "Resistance (X_QGridResistance)",      group="🔗 QGrid")
+float src_qgrid_support     = input.source(close, "Support (X_QGridSupport)",            group="🔗 QGrid")
+
+
+// ╔═══════════════════════════════════════════════════════════════════════════╗
+// ║  SECTION 2: SETTINGS                                                     ║
+// ╚═══════════════════════════════════════════════════════════════════════════╝
+
+// ── Alert Settings ──
+string i_passphrase    = input.string("YELENA_V2",  "Webhook Passphrase",               group="⚡ Alerts")
+string i_webhook_url   = input.string("",           "Webhook URL (info only)",           group="⚡ Alerts",
+     tooltip="Set actual webhook URL in the TradingView alert dialog, not here.")
+
+// ── Visual Settings ──
+string i_table_pos     = input.string("Top Right",  "Table Position",                   group="🎨 Visuals",
+     options=["Top Left", "Top Right", "Bottom Left", "Bottom Right", "Middle Right"])
+bool   i_show_detail   = input.bool(true,           "Show Component Detail Table",       group="🎨 Visuals")
+bool   i_show_sl_tp    = input.bool(true,           "Show SL/TP Lines on Signal",        group="🎨 Visuals")
+bool   i_show_labels   = input.bool(true,           "Show Signal Labels",                group="🎨 Visuals")
+int    i_label_size    = input.int(2,               "Label Size (1=tiny, 3=large)",      group="🎨 Visuals",
+     minval=1, maxval=3)
+
+// ── Risk Settings ──
+float  i_sl_atr_mult   = input.float(1.5,          "SL ATR Multiplier",                 group="📐 Risk",
+     minval=0.5, maxval=5.0, step=0.1)
+float  i_tp1_rr        = input.float(1.0,          "TP1 Risk:Reward",                   group="📐 Risk",
+     minval=0.5, maxval=5.0, step=0.1)
+float  i_tp2_rr        = input.float(2.0,          "TP2 Risk:Reward",                   group="📐 Risk",
+     minval=1.0, maxval=8.0, step=0.1)
+float  i_tp3_rr        = input.float(3.0,          "TP3 Risk:Reward",                   group="📐 Risk",
+     minval=1.5, maxval=10.0, step=0.1)
+float  i_sl_min_atr    = input.float(0.5,          "Min SL Distance (ATR mult)",        group="📐 Risk",
+     minval=0.1, maxval=2.0, step=0.1)
+
+
+// ╔═══════════════════════════════════════════════════════════════════════════╗
+// ║  SECTION 3: CORE CALCULATIONS — ATR & Component Scoring                  ║
+// ╚═══════════════════════════════════════════════════════════════════════════╝
+
+// ── ATR (must be at global scope for Pine v6) ──
+float atr_val = ta.atr(14)
+
+// ── QCloud Score (max ±1.5) ──
+float qcloud_score = src_qcloud_bull_count >= 5 ? 1.5 :
+     src_qcloud_bull_count >= 4 ? 1.0 :
+     src_qcloud_bull_count >= 3 ? 0.5 :
+     src_qcloud_bull_count <= 0 ? -1.5 :
+     src_qcloud_bull_count <= 1 ? -1.0 :
+     src_qcloud_bull_count <= 2 ? -0.5 : 0.0
+
+// ── QLine Score (max ±1.5) ──
+float qline_base  = src_qline_trend == 1 ? 1.0 : src_qline_trend == -1 ? -1.0 : 0.0
+float qline_bonus = src_qline_bounce >= 2 and src_qline_trend == 1 ? 0.5 : src_qline_bounce >= 2 and src_qline_trend == -1 ? -0.5 : 0.0
+float qline_score = qline_base + qline_bonus
+
+// ── QWave Score (max ±1.0) ──
+float qwave_score = src_qwave_score >  60 ?  1.0 :
+     src_qwave_score >  30 ?  0.5 :
+     src_qwave_score < -60 ? -1.0 :
+     src_qwave_score < -30 ? -0.5 : 0.0
+
+// ── QBands Score (max ±1.0) ──
+// Lower band position + squeeze fire = bullish opportunity
+// Upper band position + squeeze fire = bearish opportunity
+float qbands_score = src_qbands_position <= -2 ? 1.0 :
+     src_qbands_position >= 2 ? -1.0 :
+     src_qbands_sq_fire == 1  ?  0.5 :
+     src_qbands_sq_fire == -1 ? -0.5 : 0.0
+
+// ── Moneyball Score (max ±1.0) ──
+float mb_score = src_mb_value > 0 and src_mb_zone >= 5 ?  1.0 :
+     src_mb_value > 0 and src_mb_zone >= 4 ?  0.5 :
+     src_mb_value < 0 and src_mb_zone <= 2 ? -1.0 :
+     src_mb_value < 0 and src_mb_zone <= 3 ? -0.5 : 0.0
+
+// ── QMomentum Score (max ±1.0) ──
+// RSI leaving OB/OS zones or divergence signals
+float qmom_rsi_prev = nz(src_qmom_rsi[1], 50.0)
+float qmom_score = src_qmom_rsi > 30 and qmom_rsi_prev <= 30 ?  1.0 :
+     src_qmom_rsi < 70 and qmom_rsi_prev >= 70 ? -1.0 :
+     src_qmom_div > 0  ?  math.min(src_qmom_div * 0.5, 0.5) :
+     src_qmom_div < 0  ?  math.max(src_qmom_div * 0.5, -0.5) : 0.0
+
+// ── QCVD Score (max ±1.0) ──
+float qcvd_score = src_qcvd_trend ==  1 and src_qcvd_spike ==  1 ?  1.0 :
+     src_qcvd_trend ==  1 ?  0.5 :
+     src_qcvd_trend == -1 and src_qcvd_spike == -1 ? -1.0 :
+     src_qcvd_trend == -1 ? -0.5 : 0.0
+
+// ── QSMC Score (max ±1.0) ──
+float qsmc_score = src_qsmc_structure ==  1 and (src_qsmc_bos ==  1 or src_qsmc_choch ==  1) ?  1.0 :
+     src_qsmc_structure ==  1 ?  0.5 :
+     src_qsmc_structure == -1 and (src_qsmc_bos == -1 or src_qsmc_choch == -1) ? -1.0 :
+     src_qsmc_structure == -1 ? -0.5 : 0.0
+
+// ── QGrid Score (max ±1.0) ──
+// Above VWAP + near support = bullish; Below VWAP + near resistance = bearish
+float grid_dist_to_support    = nz(atr_val) > 0 ? (close - src_qgrid_support)    / atr_val : 999.0
+float grid_dist_to_resistance = nz(atr_val) > 0 ? (src_qgrid_resistance - close) / atr_val : 999.0
+
+float qgrid_score = src_qgrid_vwap_side ==  1 and grid_dist_to_support < 0.5    ?  1.0 :
+     src_qgrid_vwap_side ==  1 ?  0.5 :
+     src_qgrid_vwap_side == -1 and grid_dist_to_resistance < 0.5 ? -1.0 :
+     src_qgrid_vwap_side == -1 ? -0.5 : 0.0
+
+
+// ╔═══════════════════════════════════════════════════════════════════════════╗
+// ║  SECTION 4: TOTAL SCORE, GRADE, CONFIDENCE                               ║
+// ╚═══════════════════════════════════════════════════════════════════════════╝
+
+// ── Total Score ──
+float total_score = qcloud_score + qline_score + qwave_score + qbands_score +
+     mb_score + qmom_score + qcvd_score + qsmc_score + qgrid_score
+
+// ── Signal & Grade ──
+string signal_dir = total_score >= 6.0 ? "CALL" : total_score <= -6.0 ? "PUT" : "WAIT"
+
+string grade = total_score >=  8.0 ? "A+" :
+     total_score >=  6.0 ? "A"  :
+     total_score >=  4.0 ? "B+" :
+     total_score <= -8.0 ? "A+" :
+     total_score <= -6.0 ? "A"  :
+     total_score <= -4.0 ? "B+" : "B"
+
+bool is_tradeable = signal_dir != "WAIT"
+
+// ── Confidence Calculation ──
+// Component 1: Score magnitude (0-50%)
+float score_pct = math.min(math.abs(total_score) / 10.0 * 50.0, 50.0)
+
+// Component 2: Indicator agreement (0-30%)
+// Count how many components agree on direction
+float _bull_agrees = (qcloud_score > 0 ? 1.0 : 0.0) + (qline_score > 0 ? 1.0 : 0.0) +
+     (qwave_score > 0 ? 1.0 : 0.0) + (qbands_score > 0 ? 1.0 : 0.0) +
+     (mb_score > 0 ? 1.0 : 0.0) + (qmom_score > 0 ? 1.0 : 0.0) +
+     (qcvd_score > 0 ? 1.0 : 0.0) + (qsmc_score > 0 ? 1.0 : 0.0) +
+     (qgrid_score > 0 ? 1.0 : 0.0)
+
+float _bear_agrees = (qcloud_score < 0 ? 1.0 : 0.0) + (qline_score < 0 ? 1.0 : 0.0) +
+     (qwave_score < 0 ? 1.0 : 0.0) + (qbands_score < 0 ? 1.0 : 0.0) +
+     (mb_score < 0 ? 1.0 : 0.0) + (qmom_score < 0 ? 1.0 : 0.0) +
+     (qcvd_score < 0 ? 1.0 : 0.0) + (qsmc_score < 0 ? 1.0 : 0.0) +
+     (qgrid_score < 0 ? 1.0 : 0.0)
+
+float agreement_count = math.max(_bull_agrees, _bear_agrees)
+float agreement_pct   = (agreement_count / 9.0) * 30.0
+
+// Component 3: Quality bonuses (0-20%)
+float quality_bonus = 0.0
+quality_bonus += (src_qcloud_is_squeeze == 1 and math.abs(total_score) > 6) ? 5.0 : 0.0
+quality_bonus += (src_qline_bounce >= 3)   ? 5.0 : 0.0
+quality_bonus += (src_qsmc_choch != 0)     ? 5.0 : 0.0
+quality_bonus += (src_qcvd_spike != 0)     ? 5.0 : 0.0
+
+float confidence = math.min(score_pct + agreement_pct + quality_bonus, 100.0)
+
+
+// ╔═══════════════════════════════════════════════════════════════════════════╗
+// ║  SECTION 5: ENTRY / STOP-LOSS / TAKE-PROFIT                              ║
+// ╚═══════════════════════════════════════════════════════════════════════════╝
+
+// These values are calculated every bar but only displayed on signal bars.
+float entry_price = close
+
+// ── Stop-Loss (ATR-based with S/R awareness from QGrid) ──
+float base_sl_long  = entry_price - i_sl_atr_mult * nz(atr_val)
+float base_sl_short = entry_price + i_sl_atr_mult * nz(atr_val)
+float min_sl_dist   = i_sl_min_atr * nz(atr_val)
+
+// CALL: SL below support, but at least min_sl_dist away
+float sr_sl_long = src_qgrid_support - 0.1 * nz(atr_val)
+float sl_long    = math.max(sr_sl_long, base_sl_long)
+sl_long         := math.min(sl_long, entry_price - min_sl_dist)
+
+// PUT: SL above resistance, but at least min_sl_dist away
+float sr_sl_short = src_qgrid_resistance + 0.1 * nz(atr_val)
+float sl_short    = math.min(sr_sl_short, base_sl_short)
+sl_short         := math.max(sl_short, entry_price + min_sl_dist)
+
+// Active SL based on signal direction
+float active_sl = signal_dir == "CALL" ? sl_long : signal_dir == "PUT" ? sl_short : na
+
+// ── Take-Profit (risk-based multiples) ──
+float risk = math.abs(entry_price - nz(active_sl))
+
+float tp1 = signal_dir == "CALL" ? entry_price + i_tp1_rr * risk : signal_dir == "PUT" ? entry_price - i_tp1_rr * risk : na
+float tp2 = signal_dir == "CALL" ? entry_price + i_tp2_rr * risk : signal_dir == "PUT" ? entry_price - i_tp2_rr * risk : na
+float tp3 = signal_dir == "CALL" ? entry_price + i_tp3_rr * risk : signal_dir == "PUT" ? entry_price - i_tp3_rr * risk : na
+
+
+// ╔═══════════════════════════════════════════════════════════════════════════╗
+// ║  SECTION 6: SIGNAL DETECTION — New Signal Triggers                        ║
+// ╚═══════════════════════════════════════════════════════════════════════════╝
+
+// Detect when a NEW tradeable signal appears (grade transitions to A or A+)
+bool prev_tradeable = nz(total_score[1]) >= 6.0 or nz(total_score[1]) <= -6.0
+bool new_signal     = is_tradeable and not prev_tradeable
+
+// Also detect grade upgrades (A → A+) as noteworthy
+bool prev_a_plus = nz(total_score[1]) >= 8.0 or nz(total_score[1]) <= -8.0
+bool upgraded_to_a_plus = (total_score >= 8.0 or total_score <= -8.0) and not prev_a_plus and prev_tradeable
+
+// Persistent signal tracking: remember last signal bar for SL/TP display
+var float  last_entry = na
+var float  last_sl    = na
+var float  last_tp1   = na
+var float  last_tp2   = na
+var float  last_tp3   = na
+var string last_dir   = "WAIT"
+var int    last_bar   = na
+
+if new_signal or upgraded_to_a_plus
+    last_entry := entry_price
+    last_sl    := active_sl
+    last_tp1   := tp1
+    last_tp2   := tp2
+    last_tp3   := tp3
+    last_dir   := signal_dir
+    last_bar   := bar_index
+
+
+// ╔═══════════════════════════════════════════════════════════════════════════╗
+// ║  SECTION 7: VISUAL RENDERING — Labels & Lines                             ║
+// ╚═══════════════════════════════════════════════════════════════════════════╝
+
+// ── Signal Labels ──
+if i_show_labels and (new_signal or upgraded_to_a_plus)
+    string lbl_text = signal_dir + " " + grade + " (" + str.tostring(math.round(confidence)) + "%)"
+
+    // Add entry/SL/TP info
+    lbl_text += "\nE: " + str.tostring(entry_price, format.mintick)
+    lbl_text += "  SL: " + str.tostring(active_sl, format.mintick)
+    lbl_text += "\nTP1: " + str.tostring(tp1, format.mintick) +
+         "  TP2: " + str.tostring(tp2, format.mintick) +
+         "  TP3: " + str.tostring(tp3, format.mintick)
+
+    label.new(bar_index, signal_dir == "CALL" ? low - atr_val * 0.5 : high + atr_val * 0.5,
+         lbl_text,
+         color = signal_dir == "CALL" ? color.new(#00C853, 10) : color.new(#FF1744, 10),
+         textcolor = color.white,
+         style = signal_dir == "CALL" ? label.style_label_up : label.style_label_down,
+         size = i_label_size == 3 ? size.large : i_label_size == 2 ? size.normal : size.small)
+
+// ── SL/TP Lines (drawn from signal bar, extend right) ──
+if i_show_sl_tp and (new_signal or upgraded_to_a_plus)
+    int _x1 = bar_index
+    int _x2 = bar_index + 20
+
+    // Entry line — white solid
+    line.new(_x1, entry_price, _x2, entry_price,
+         color=color.white, style=line.style_solid, width=1)
+
+    // SL line — red dashed
+    line.new(_x1, active_sl, _x2, active_sl,
+         color=color.red, style=line.style_dashed, width=2)
+
+    // TP1 — green dotted (1:1)
+    line.new(_x1, tp1, _x2, tp1,
+         color=color.new(#00E676, 30), style=line.style_dotted, width=1)
+
+    // TP2 — green dashed (2:1)
+    line.new(_x1, tp2, _x2, tp2,
+         color=color.new(#00E676, 10), style=line.style_dashed, width=1)
+
+    // TP3 — green solid (3:1)
+    line.new(_x1, tp3, _x2, tp3,
+         color=color.new(#00E676, 0), style=line.style_solid, width=2)
+
+
+// ╔═══════════════════════════════════════════════════════════════════════════╗
+// ║  SECTION 8: MAIN SCORE TABLE                                              ║
+// ╚═══════════════════════════════════════════════════════════════════════════╝
+
+// Table position mapping
+var table_pos = i_table_pos == "Top Left"     ? position.top_left :
+     i_table_pos == "Top Right"    ? position.top_right :
+     i_table_pos == "Bottom Left"  ? position.bottom_left :
+     i_table_pos == "Bottom Right" ? position.bottom_right :
+     position.middle_right
+
+// Colors
+color c_bg       = color.new(#1a1a2e, 5)
+color c_header   = color.new(#16213e, 0)
+color c_bull     = color.new(#00C853, 0)
+color c_bear     = color.new(#FF1744, 0)
+color c_neutral  = color.new(#78909C, 0)
+color c_wait     = color.new(#455A64, 0)
+color c_text     = color.new(#E0E0E0, 0)
+
+color signal_color = signal_dir == "CALL" ? c_bull : signal_dir == "PUT" ? c_bear : c_wait
+
+// Score bar visualization (text-based)
+string score_bar = ""
+int bar_filled = math.round(math.abs(total_score) / 10.0 * 10)
+for i = 0 to 9
+    score_bar += i < bar_filled ? "█" : "░"
+
+// Confidence color gradient
+color conf_color = confidence >= 80 ? color.new(#00E676, 0) :
+     confidence >= 60 ? color.new(#FFEB3B, 0) :
+     confidence >= 40 ? color.new(#FF9800, 0) :
+     color.new(#FF5252, 0)
+
+// ── Build Main Table ──
+var table main_tbl = table.new(table_pos, 3, 9, border_width=1, border_color=color.new(#37474F, 0))
+
+if barstate.islast
+    // Row 0: Header
+    table.cell(main_tbl, 0, 0, "MASTER CONFLUENCE v2", text_color=color.white,
+         bgcolor=c_header, text_size=size.small, text_halign=text.align_left)
+    table.merge_cells(main_tbl, 0, 0, 2, 0)
+
+    // Row 1: Signal + Grade
+    table.cell(main_tbl, 0, 1, "Signal", text_color=c_text, bgcolor=c_bg, text_size=size.small)
+    table.cell(main_tbl, 1, 1, signal_dir + " " + grade, text_color=color.white,
+         bgcolor=signal_color, text_size=size.normal)
+    table.cell(main_tbl, 2, 1, is_tradeable ? "🔔 TRADE" : "⏳ WAIT", text_color=c_text,
+         bgcolor=c_bg, text_size=size.small)
+
+    // Row 2: Score
+    table.cell(main_tbl, 0, 2, "Score", text_color=c_text, bgcolor=c_bg, text_size=size.small)
+    table.cell(main_tbl, 1, 2, str.tostring(total_score, "#.#") + " / 10",
+         text_color=signal_color, bgcolor=c_bg, text_size=size.normal)
+    table.cell(main_tbl, 2, 2, score_bar, text_color=signal_color, bgcolor=c_bg,
+         text_size=size.small, text_font_family=font.family_monospace)
+
+    // Row 3: Confidence
+    table.cell(main_tbl, 0, 3, "Confidence", text_color=c_text, bgcolor=c_bg, text_size=size.small)
+    table.cell(main_tbl, 1, 3, str.tostring(math.round(confidence)) + "%",
+         text_color=conf_color, bgcolor=c_bg, text_size=size.normal)
+    table.cell(main_tbl, 2, 3, agreement_count >= 7 ? "STRONG" : agreement_count >= 5 ? "GOOD" : "WEAK",
+         text_color=conf_color, bgcolor=c_bg, text_size=size.small)
+
+    // Row 4: Entry (only if tradeable)
+    table.cell(main_tbl, 0, 4, "Entry", text_color=c_text, bgcolor=c_bg, text_size=size.small)
+    table.cell(main_tbl, 1, 4, is_tradeable ? str.tostring(entry_price, format.mintick) : "—",
+         text_color=c_text, bgcolor=c_bg, text_size=size.small)
+    table.cell(main_tbl, 2, 4, "", bgcolor=c_bg)
+
+    // Row 5: Stop Loss
+    table.cell(main_tbl, 0, 5, "Stop Loss", text_color=c_text, bgcolor=c_bg, text_size=size.small)
+    table.cell(main_tbl, 1, 5, is_tradeable ? str.tostring(active_sl, format.mintick) : "—",
+         text_color=color.red, bgcolor=c_bg, text_size=size.small)
+    table.cell(main_tbl, 2, 5, is_tradeable ? str.tostring(risk, format.mintick) + " risk" : "",
+         text_color=c_text, bgcolor=c_bg, text_size=size.tiny)
+
+    // Row 6: TP1
+    table.cell(main_tbl, 0, 6, "TP1 (" + str.tostring(i_tp1_rr, "#.#") + "R)",
+         text_color=c_text, bgcolor=c_bg, text_size=size.small)
+    table.cell(main_tbl, 1, 6, is_tradeable ? str.tostring(tp1, format.mintick) : "—",
+         text_color=c_bull, bgcolor=c_bg, text_size=size.small)
+    table.cell(main_tbl, 2, 6, "", bgcolor=c_bg)
+
+    // Row 7: TP2
+    table.cell(main_tbl, 0, 7, "TP2 (" + str.tostring(i_tp2_rr, "#.#") + "R)",
+         text_color=c_text, bgcolor=c_bg, text_size=size.small)
+    table.cell(main_tbl, 1, 7, is_tradeable ? str.tostring(tp2, format.mintick) : "—",
+         text_color=c_bull, bgcolor=c_bg, text_size=size.small)
+    table.cell(main_tbl, 2, 7, "", bgcolor=c_bg)
+
+    // Row 8: TP3
+    table.cell(main_tbl, 0, 8, "TP3 (" + str.tostring(i_tp3_rr, "#.#") + "R)",
+         text_color=c_text, bgcolor=c_bg, text_size=size.small)
+    table.cell(main_tbl, 1, 8, is_tradeable ? str.tostring(tp3, format.mintick) : "—",
+         text_color=c_bull, bgcolor=c_bg, text_size=size.small)
+    table.cell(main_tbl, 2, 8, "", bgcolor=c_bg)
+
+
+// ╔═══════════════════════════════════════════════════════════════════════════╗
+// ║  SECTION 9: COMPONENT DETAIL TABLE                                        ║
+// ╚═══════════════════════════════════════════════════════════════════════════╝
+
+// Detail table position: offset from main table
+var detail_pos = i_table_pos == "Top Right"    ? position.top_right :
+     i_table_pos == "Top Left"     ? position.top_left :
+     i_table_pos == "Bottom Right" ? position.bottom_right :
+     i_table_pos == "Bottom Left"  ? position.bottom_left :
+     position.middle_right
+
+var table detail_tbl = i_show_detail ?
+     table.new(i_table_pos == "Top Right" ? position.middle_right : position.bottom_right,
+         3, 10, border_width=1, border_color=color.new(#37474F, 0)) : na
+
+// Helper function for score color
+f_score_color(float sc) =>
+    sc > 0 ? c_bull : sc < 0 ? c_bear : c_neutral
+
+// Helper: format score with sign
+f_score_str(float sc) =>
+    sc > 0 ? "+" + str.tostring(sc, "#.#") : str.tostring(sc, "#.#")
+
+if barstate.islast and i_show_detail and not na(detail_tbl)
+    // Header
+    table.cell(detail_tbl, 0, 0, "COMPONENT", text_color=color.white, bgcolor=c_header, text_size=size.tiny)
+    table.cell(detail_tbl, 1, 0, "SCORE", text_color=color.white, bgcolor=c_header, text_size=size.tiny)
+    table.cell(detail_tbl, 2, 0, "STATE", text_color=color.white, bgcolor=c_header, text_size=size.tiny)
+
+    // QCloud
+    table.cell(detail_tbl, 0, 1, "QCloud",  text_color=c_text, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(detail_tbl, 1, 1, f_score_str(qcloud_score), text_color=f_score_color(qcloud_score), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(detail_tbl, 2, 1, str.tostring(math.round(src_qcloud_bull_count)) + "/5" +
+         (src_qcloud_is_squeeze == 1 ? " SQZ" : ""),
+         text_color=f_score_color(qcloud_score), bgcolor=c_bg, text_size=size.tiny)
+
+    // QLine
+    table.cell(detail_tbl, 0, 2, "QLine",   text_color=c_text, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(detail_tbl, 1, 2, f_score_str(qline_score), text_color=f_score_color(qline_score), bgcolor=c_bg, text_size=size.tiny)
+    string qline_state = src_qline_trend == 1 ? "BULL" : "BEAR"
+    qline_state += src_qline_bounce >= 3 ? " ★★★" : src_qline_bounce >= 2 ? " ★★" : src_qline_bounce >= 1 ? " ★" : ""
+    table.cell(detail_tbl, 2, 2, qline_state, text_color=f_score_color(qline_score), bgcolor=c_bg, text_size=size.tiny)
+
+    // QWave
+    table.cell(detail_tbl, 0, 3, "QWave",   text_color=c_text, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(detail_tbl, 1, 3, f_score_str(qwave_score), text_color=f_score_color(qwave_score), bgcolor=c_bg, text_size=size.tiny)
+    string qwave_state = src_qwave_score > 60 ? "STRONG" : src_qwave_score > 30 ? "BULL" :
+         src_qwave_score < -60 ? "STRONG" : src_qwave_score < -30 ? "BEAR" : "FLAT"
+    table.cell(detail_tbl, 2, 3, qwave_state + (src_qwave_trending == 1 ? " ↗" : ""),
+         text_color=f_score_color(qwave_score), bgcolor=c_bg, text_size=size.tiny)
+
+    // QBands
+    table.cell(detail_tbl, 0, 4, "QBands",  text_color=c_text, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(detail_tbl, 1, 4, f_score_str(qbands_score), text_color=f_score_color(qbands_score), bgcolor=c_bg, text_size=size.tiny)
+    string qbands_state = src_qbands_sq_fire == 1 ? "SQZ→BULL" : src_qbands_sq_fire == -1 ? "SQZ→BEAR" :
+         src_qbands_position <= -2 ? "LOWER" : src_qbands_position >= 2 ? "UPPER" : "MID"
+    table.cell(detail_tbl, 2, 4, qbands_state, text_color=f_score_color(qbands_score), bgcolor=c_bg, text_size=size.tiny)
+
+    // Moneyball
+    table.cell(detail_tbl, 0, 5, "Moneyball", text_color=c_text, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(detail_tbl, 1, 5, f_score_str(mb_score), text_color=f_score_color(mb_score), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(detail_tbl, 2, 5, "Z" + str.tostring(math.round(src_mb_zone)) + " " +
+         str.tostring(math.round(src_mb_value)),
+         text_color=f_score_color(mb_score), bgcolor=c_bg, text_size=size.tiny)
+
+    // QMomentum
+    table.cell(detail_tbl, 0, 6, "QMomentum", text_color=c_text, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(detail_tbl, 1, 6, f_score_str(qmom_score), text_color=f_score_color(qmom_score), bgcolor=c_bg, text_size=size.tiny)
+    string qmom_state = "RSI " + str.tostring(math.round(src_qmom_rsi))
+    qmom_state += src_qmom_div > 0 ? " +DIV" : src_qmom_div < 0 ? " -DIV" : ""
+    table.cell(detail_tbl, 2, 6, qmom_state, text_color=f_score_color(qmom_score), bgcolor=c_bg, text_size=size.tiny)
+
+    // QCVD
+    table.cell(detail_tbl, 0, 7, "QCVD",    text_color=c_text, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(detail_tbl, 1, 7, f_score_str(qcvd_score), text_color=f_score_color(qcvd_score), bgcolor=c_bg, text_size=size.tiny)
+    string qcvd_state = src_qcvd_trend == 1 ? "BUY" : "SELL"
+    qcvd_state += src_qcvd_spike != 0 ? " SPIKE" : ""
+    table.cell(detail_tbl, 2, 7, qcvd_state, text_color=f_score_color(qcvd_score), bgcolor=c_bg, text_size=size.tiny)
+
+    // QSMC
+    table.cell(detail_tbl, 0, 8, "QSMC",    text_color=c_text, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(detail_tbl, 1, 8, f_score_str(qsmc_score), text_color=f_score_color(qsmc_score), bgcolor=c_bg, text_size=size.tiny)
+    string qsmc_state = src_qsmc_structure == 1 ? "UP" : src_qsmc_structure == -1 ? "DOWN" : "—"
+    qsmc_state += src_qsmc_choch != 0 ? " CHoCH" : src_qsmc_bos != 0 ? " BOS" : ""
+    table.cell(detail_tbl, 2, 8, qsmc_state, text_color=f_score_color(qsmc_score), bgcolor=c_bg, text_size=size.tiny)
+
+    // QGrid
+    table.cell(detail_tbl, 0, 9, "QGrid",   text_color=c_text, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(detail_tbl, 1, 9, f_score_str(qgrid_score), text_color=f_score_color(qgrid_score), bgcolor=c_bg, text_size=size.tiny)
+    string qgrid_state = src_qgrid_vwap_side == 1 ? "↑VWAP" : "↓VWAP"
+    table.cell(detail_tbl, 2, 9, qgrid_state, text_color=f_score_color(qgrid_score), bgcolor=c_bg, text_size=size.tiny)
+
+
+// ╔═══════════════════════════════════════════════════════════════════════════╗
+// ║  SECTION 10: ALERTS & WEBHOOK                                             ║
+// ╚═══════════════════════════════════════════════════════════════════════════╝
+
+// ── Alert Conditions ──
+alertcondition(total_score >= 8.0,  title="CALL A+", message="YELENA CALL A+ Signal")
+alertcondition(total_score >= 6.0 and total_score < 8.0, title="CALL A", message="YELENA CALL A Signal")
+alertcondition(total_score <= -8.0, title="PUT A+",  message="YELENA PUT A+ Signal")
+alertcondition(total_score <= -6.0 and total_score > -8.0, title="PUT A", message="YELENA PUT A Signal")
+
+// ── Comprehensive Webhook Alert ──
+// This fires for ANY A or A+ signal (the only tradeable grades)
+// The webhook URL is set in TradingView's alert dialog — the message below is the payload.
+
+// Build JSON payload string
+string _tf = timeframe.period
+string _ts = str.tostring(year) + "-" + str.tostring(month, "00") + "-" + str.tostring(dayofmonth, "00") +
+     "T" + str.tostring(hour, "00") + ":" + str.tostring(minute, "00") + ":00Z"
+
+string webhook_payload = '{"passphrase":"' + i_passphrase + '"' +
+     ',"ticker":"' + syminfo.ticker + '"' +
+     ',"timeframe":"' + _tf + '"' +
+     ',"signal":"' + signal_dir + '"' +
+     ',"grade":"' + grade + '"' +
+     ',"score":' + str.tostring(total_score, "#.##") +
+     ',"confidence":' + str.tostring(math.round(confidence)) +
+     ',"entry":' + str.tostring(entry_price, format.mintick) +
+     ',"stop_loss":' + str.tostring(active_sl, format.mintick) +
+     ',"tp1":' + str.tostring(tp1, format.mintick) +
+     ',"tp2":' + str.tostring(tp2, format.mintick) +
+     ',"tp3":' + str.tostring(tp3, format.mintick) +
+     ',"components":{' +
+         '"qcloud":{"score":' + str.tostring(qcloud_score, "#.#") +
+             ',"bull_count":' + str.tostring(math.round(src_qcloud_bull_count)) +
+             ',"direction":' + str.tostring(math.round(src_qcloud_direction)) +
+             ',"squeeze":' + str.tostring(math.round(src_qcloud_is_squeeze)) + '}' +
+         ',"qline":{"score":' + str.tostring(qline_score, "#.#") +
+             ',"trend":' + str.tostring(math.round(src_qline_trend)) +
+             ',"bounce":' + str.tostring(math.round(src_qline_bounce)) + '}' +
+         ',"qwave":{"score":' + str.tostring(qwave_score, "#.#") +
+             ',"wave_score":' + str.tostring(math.round(src_qwave_score)) + '}' +
+         ',"qbands":{"score":' + str.tostring(qbands_score, "#.#") +
+             ',"position":' + str.tostring(math.round(src_qbands_position)) +
+             ',"squeeze_fire":' + str.tostring(math.round(src_qbands_sq_fire)) + '}' +
+         ',"moneyball":{"score":' + str.tostring(mb_score, "#.#") +
+             ',"value":' + str.tostring(math.round(src_mb_value)) +
+             ',"zone":' + str.tostring(math.round(src_mb_zone)) + '}' +
+         ',"qmomentum":{"score":' + str.tostring(qmom_score, "#.#") +
+             ',"rsi":' + str.tostring(math.round(src_qmom_rsi)) +
+             ',"div":' + str.tostring(src_qmom_div, "#.#") + '}' +
+         ',"qcvd":{"score":' + str.tostring(qcvd_score, "#.#") +
+             ',"trend":' + str.tostring(math.round(src_qcvd_trend)) +
+             ',"spike":' + str.tostring(math.round(src_qcvd_spike)) + '}' +
+         ',"qsmc":{"score":' + str.tostring(qsmc_score, "#.#") +
+             ',"structure":' + str.tostring(math.round(src_qsmc_structure)) +
+             ',"bos":' + str.tostring(math.round(src_qsmc_bos)) +
+             ',"choch":' + str.tostring(math.round(src_qsmc_choch)) + '}' +
+         ',"qgrid":{"score":' + str.tostring(qgrid_score, "#.#") +
+             ',"vwap_side":' + str.tostring(math.round(src_qgrid_vwap_side)) + '}' +
+     '}' +
+     ',"timestamp":"' + _ts + '"}'
+
+// Master alert — fires for all A and A+ signals
+// Uses alert() instead of alertcondition() because the payload is a dynamic string.
+// In TradingView: create alert → condition = "YELENA v2: Master Confluence" → "Any alert() call"
+// Set webhook URL in the alert dialog. The message below is sent as the POST body.
+if is_tradeable and (new_signal or upgraded_to_a_plus)
+    alert(webhook_payload, alert.freq_once_per_bar_close)
+
+
+// ╔═══════════════════════════════════════════════════════════════════════════╗
+// ║  SECTION 11: HIDDEN EXPORTS (for Multi-Timeframe Alignment)               ║
+// ╚═══════════════════════════════════════════════════════════════════════════╝
+// Master Confluence exports its own signals so a multi-timeframe script can read them.
+
+plot(total_score,                     "X_MC_Score",      display=display.none)
+plot(confidence,                      "X_MC_Confidence", display=display.none)
+plot(is_tradeable ? 1 : 0,           "X_MC_Tradeable",  display=display.none)
+plot(signal_dir == "CALL" ? 1 : signal_dir == "PUT" ? -1 : 0,
+                                      "X_MC_Direction",  display=display.none)
+plot(grade == "A+" ? 2 : grade == "A" ? 1 : 0,
+                                      "X_MC_Grade",      display=display.none)

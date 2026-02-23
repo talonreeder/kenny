@@ -1,0 +1,316 @@
+// ═══════════════════════════════════════════════════════════════════
+// YELENA v2: Source Wiring Debugger
+// ═══════════════════════════════════════════════════════════════════
+// PURPOSE: Shows the RAW values Master Confluence is reading from
+//          each sub-indicator's hidden plots.
+//
+// HOW TO USE:
+//   1. Add this to same chart as Master Confluence
+//   2. Wire EACH input to the SAME source as Master Confluence
+//   3. Look at the debug table:
+//      ✅ = Value looks correct (small number matching expected range)
+//      ❌ = Value looks like raw price (>100) — SOURCE NOT WIRED!
+//
+// EXPECTED VALUE RANGES:
+//   QCloud Bull Count:  0 to 5
+//   QCloud Direction:   -1, 0, or 1
+//   QCloud Squeeze:     0 or 1
+//   QLine Trend:        -1, 0, or 1
+//   QLine Bounce:       0 to 5
+//   QLine Extended:     0 or 1
+//   QWave Score:        -100 to +100
+//   QWave ADX:          0 to 100
+//   QBands Position:    -3 to +3
+//   QBands Squeeze:     -1, 0, or 1
+//   Moneyball Value:    -200 to +200
+//   Moneyball Zone:     1 to 7
+//   QMomentum RSI:      0 to 100
+//   QMomentum Div:      -5 to +5
+//   QCVD Trend:         -1 or 1
+//   QCVD Spike:         -1, 0, or 1
+//   QSMC Structure:     -1, 0, or 1
+//   QSMC BOS:           -1, 0, or 1
+//   QSMC CHoCH:         -1, 0, or 1
+//   QGrid VWAP Side:    -1 or 1
+//   QGrid Resistance:   price level (reasonable)
+//   QGrid Support:      price level (reasonable)
+// ═══════════════════════════════════════════════════════════════════
+
+//@version=6
+indicator("YELENA: Source Debug", overlay=false)
+
+// ── Wire these to the SAME sources as Master Confluence ──
+float d_qcloud_bull  = input.source(close, "Bull Count (X_BullCount)",   group="🔗 QCloud")
+float d_qcloud_dir   = input.source(close, "Direction (X_Direction)",     group="🔗 QCloud")
+float d_qcloud_sqz   = input.source(close, "Squeeze (X_IsSqueeze)",      group="🔗 QCloud")
+
+float d_qline_trend  = input.source(close, "Trend (X_Trend)",            group="🔗 QLine")
+float d_qline_bounce = input.source(close, "Bounce (X_BounceScore)",     group="🔗 QLine")
+float d_qline_ext    = input.source(close, "Extended (X_IsExtended)",     group="🔗 QLine")
+
+float d_qwave_score  = input.source(close, "Wave Score (X_QWaveScore)",  group="🔗 QWave")
+float d_qwave_adx    = input.source(close, "ADX (X_QWaveADX)",           group="🔗 QWave")
+
+float d_qbands_pos   = input.source(close, "Position (X_QBandsPosition)",group="🔗 QBands")
+float d_qbands_fire  = input.source(close, "Squeeze Fire (X_QBandsFire)",group="🔗 QBands")
+
+float d_mb_val       = input.source(close, "Value (X_MoneyballValue)",    group="🔗 Moneyball")
+float d_mb_zone      = input.source(close, "Zone (X_MoneyballZone)",      group="🔗 Moneyball")
+
+float d_qmom_rsi     = input.source(close, "RSI (X_QMomentumRSI)",       group="🔗 QMomentum")
+float d_qmom_div     = input.source(close, "Div (X_QMomentumDiv)",        group="🔗 QMomentum")
+
+float d_qcvd_trend   = input.source(close, "Trend (X_QCVDTrend)",        group="🔗 QCVD")
+float d_qcvd_spike   = input.source(close, "Spike (X_QCVDSpike)",        group="🔗 QCVD")
+
+float d_qsmc_struct  = input.source(close, "Structure (X_QSMCStructure)",group="🔗 QSMC")
+float d_qsmc_bos     = input.source(close, "BOS (X_QSMCBOS)",            group="🔗 QSMC")
+float d_qsmc_choch   = input.source(close, "CHoCH (X_QSMCCHoCH)",        group="🔗 QSMC")
+
+float d_qgrid_vwap   = input.source(close, "VWAP Side (X_QGridVWAPSide)",group="🔗 QGrid")
+float d_qgrid_res    = input.source(close, "Resistance (X_QGridRes)",     group="🔗 QGrid")
+float d_qgrid_sup    = input.source(close, "Support (X_QGridSupport)",    group="🔗 QGrid")
+
+// ── Validation Functions ──
+f_is_valid_small(float val, float lo, float hi) =>
+    val >= lo and val <= hi
+
+f_is_valid_price(float val) =>
+    val > 0 and val < close * 2  // Reasonable price level
+
+f_status(bool ok) =>
+    ok ? "✅" : "❌"
+
+f_val_color(bool ok) =>
+    ok ? color.new(#00C853, 0) : color.new(#FF1744, 0)
+
+// ── Validate Each Source ──
+bool ok_qcloud_bull  = f_is_valid_small(d_qcloud_bull,  0, 5)
+bool ok_qcloud_dir   = f_is_valid_small(d_qcloud_dir,  -1, 1)
+bool ok_qcloud_sqz   = f_is_valid_small(d_qcloud_sqz,   0, 1)
+bool ok_qline_trend  = f_is_valid_small(d_qline_trend, -1, 1)
+bool ok_qline_bounce = f_is_valid_small(d_qline_bounce, 0, 10)
+bool ok_qline_ext    = f_is_valid_small(d_qline_ext,    0, 1)
+bool ok_qwave_score  = f_is_valid_small(d_qwave_score, -100, 100)
+bool ok_qwave_adx    = f_is_valid_small(d_qwave_adx,    0, 100)
+bool ok_qbands_pos   = f_is_valid_small(d_qbands_pos,  -5, 5)
+bool ok_qbands_fire  = f_is_valid_small(d_qbands_fire, -1, 1)
+bool ok_mb_val       = f_is_valid_small(d_mb_val,     -500, 500)
+bool ok_mb_zone      = f_is_valid_small(d_mb_zone,      1, 7)
+bool ok_qmom_rsi     = f_is_valid_small(d_qmom_rsi,     0, 100)
+bool ok_qmom_div     = f_is_valid_small(d_qmom_div,   -10, 10)
+bool ok_qcvd_trend   = f_is_valid_small(d_qcvd_trend,  -1, 1)
+bool ok_qcvd_spike   = f_is_valid_small(d_qcvd_spike,  -1, 1)
+bool ok_qsmc_struct  = f_is_valid_small(d_qsmc_struct, -1, 1)
+bool ok_qsmc_bos     = f_is_valid_small(d_qsmc_bos,    -1, 1)
+bool ok_qsmc_choch   = f_is_valid_small(d_qsmc_choch,  -1, 1)
+bool ok_qgrid_vwap   = f_is_valid_small(d_qgrid_vwap,  -1, 1)
+bool ok_qgrid_res    = f_is_valid_price(d_qgrid_res)
+bool ok_qgrid_sup    = f_is_valid_price(d_qgrid_sup)
+
+// ── Count Valid Sources ──
+int valid_count = (ok_qcloud_bull ? 1 : 0) + (ok_qcloud_dir ? 1 : 0) + (ok_qcloud_sqz ? 1 : 0) +
+     (ok_qline_trend ? 1 : 0) + (ok_qline_bounce ? 1 : 0) + (ok_qline_ext ? 1 : 0) +
+     (ok_qwave_score ? 1 : 0) + (ok_qwave_adx ? 1 : 0) +
+     (ok_qbands_pos ? 1 : 0) + (ok_qbands_fire ? 1 : 0) +
+     (ok_mb_val ? 1 : 0) + (ok_mb_zone ? 1 : 0) +
+     (ok_qmom_rsi ? 1 : 0) + (ok_qmom_div ? 1 : 0) +
+     (ok_qcvd_trend ? 1 : 0) + (ok_qcvd_spike ? 1 : 0) +
+     (ok_qsmc_struct ? 1 : 0) + (ok_qsmc_bos ? 1 : 0) + (ok_qsmc_choch ? 1 : 0) +
+     (ok_qgrid_vwap ? 1 : 0) + (ok_qgrid_res ? 1 : 0) + (ok_qgrid_sup ? 1 : 0)
+
+int total_sources = 22
+
+// ── Replicate MC Scoring for Verification ──
+float v_qcloud = d_qcloud_bull >= 5 ? 1.5 : d_qcloud_bull >= 4 ? 1.0 : d_qcloud_bull >= 3 ? 0.5 :
+     d_qcloud_bull <= 0 ? -1.5 : d_qcloud_bull <= 1 ? -1.0 : d_qcloud_bull <= 2 ? -0.5 : 0.0
+float v_qline_base = d_qline_trend == 1 ? 1.0 : d_qline_trend == -1 ? -1.0 : 0.0
+float v_qline_bonus = d_qline_bounce >= 2 and d_qline_trend == 1 ? 0.5 : d_qline_bounce >= 2 and d_qline_trend == -1 ? -0.5 : 0.0
+float v_qline = v_qline_base + v_qline_bonus
+float v_qwave = d_qwave_score > 60 ? 1.0 : d_qwave_score > 30 ? 0.5 : d_qwave_score < -60 ? -1.0 : d_qwave_score < -30 ? -0.5 : 0.0
+float v_qbands = d_qbands_pos <= -2 ? 1.0 : d_qbands_pos >= 2 ? -1.0 :
+     d_qbands_fire == 1 ? 0.5 : d_qbands_fire == -1 ? -0.5 : 0.0
+float v_mb = d_mb_val > 0 and d_mb_zone >= 5 ? 1.0 : d_mb_val > 0 and d_mb_zone >= 4 ? 0.5 :
+     d_mb_val < 0 and d_mb_zone <= 2 ? -1.0 : d_mb_val < 0 and d_mb_zone <= 3 ? -0.5 : 0.0
+float v_qcvd = d_qcvd_trend == 1 and d_qcvd_spike == 1 ? 1.0 : d_qcvd_trend == 1 ? 0.5 :
+     d_qcvd_trend == -1 and d_qcvd_spike == -1 ? -1.0 : d_qcvd_trend == -1 ? -0.5 : 0.0
+float v_qsmc = d_qsmc_struct == 1 and (d_qsmc_bos == 1 or d_qsmc_choch == 1) ? 1.0 :
+     d_qsmc_struct == 1 ? 0.5 : d_qsmc_struct == -1 and (d_qsmc_bos == -1 or d_qsmc_choch == -1) ? -1.0 :
+     d_qsmc_struct == -1 ? -0.5 : 0.0
+float v_qgrid = d_qgrid_vwap == 1 ? 0.5 : d_qgrid_vwap == -1 ? -0.5 : 0.0
+// (Simplified QMomentum — skip event-driven RSI crossing)
+float v_qmom = d_qmom_div > 0 ? 0.5 : d_qmom_div < 0 ? -0.5 : 0.0
+
+float v_total = v_qcloud + v_qline + v_qwave + v_qbands + v_mb + v_qmom + v_qcvd + v_qsmc + v_qgrid
+string v_dir  = v_total >= 6.0 ? "CALL" : v_total <= -6.0 ? "PUT" : "WAIT"
+
+// ── Debug Table ──
+var table t = table.new(position.top_right, 5, 28, bgcolor=color.new(#1a1a2e, 5),
+     border_width=1, border_color=color.new(#ffffff, 80))
+
+if barstate.islast
+    color c_hdr = color.new(#e94560, 0)
+    color c_bg  = color.new(#1a1a2e, 5)
+    color c_txt = color.new(#ffffff, 20)
+
+    // Header
+    string status_emoji = valid_count == total_sources ? "✅ ALL WIRED" :
+         valid_count > total_sources / 2 ? "⚠️ PARTIAL" : "❌ NOT WIRED"
+    table.cell(t, 0, 0, status_emoji + " (" + str.tostring(valid_count) + "/" + str.tostring(total_sources) + ")",
+         text_color=color.white, bgcolor=c_hdr, text_size=size.small)
+    table.cell(t, 1, 0, "Raw Value", text_color=color.white, bgcolor=c_hdr, text_size=size.tiny)
+    table.cell(t, 2, 0, "Expected", text_color=color.white, bgcolor=c_hdr, text_size=size.tiny)
+    table.cell(t, 3, 0, "Score", text_color=color.white, bgcolor=c_hdr, text_size=size.tiny)
+    table.cell(t, 4, 0, "OK?", text_color=color.white, bgcolor=c_hdr, text_size=size.tiny)
+
+    // QCloud
+    table.cell(t, 0, 1, "☁️ QCloud Bull", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 1, str.tostring(d_qcloud_bull, "#.##"), text_color=f_val_color(ok_qcloud_bull), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 1, "0-5", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 1, str.tostring(v_qcloud, "#.#"), text_color=v_qcloud > 0 ? color.green : v_qcloud < 0 ? color.red : c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 1, f_status(ok_qcloud_bull), bgcolor=c_bg, text_size=size.tiny)
+
+    table.cell(t, 0, 2, "☁️ QCloud Dir", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 2, str.tostring(d_qcloud_dir, "#"), text_color=f_val_color(ok_qcloud_dir), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 2, "-1/0/1", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 2, "", bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 2, f_status(ok_qcloud_dir), bgcolor=c_bg, text_size=size.tiny)
+
+    table.cell(t, 0, 3, "☁️ QCloud Sqz", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 3, str.tostring(d_qcloud_sqz, "#"), text_color=f_val_color(ok_qcloud_sqz), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 3, "0/1", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 3, "", bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 3, f_status(ok_qcloud_sqz), bgcolor=c_bg, text_size=size.tiny)
+
+    // QLine
+    table.cell(t, 0, 4, "📈 QLine Trend", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 4, str.tostring(d_qline_trend, "#"), text_color=f_val_color(ok_qline_trend), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 4, "-1/0/1", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 4, str.tostring(v_qline, "#.#"), text_color=v_qline > 0 ? color.green : v_qline < 0 ? color.red : c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 4, f_status(ok_qline_trend), bgcolor=c_bg, text_size=size.tiny)
+
+    table.cell(t, 0, 5, "📈 QLine Bounce", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 5, str.tostring(d_qline_bounce, "#"), text_color=f_val_color(ok_qline_bounce), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 5, "0-5", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 5, "", bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 5, f_status(ok_qline_bounce), bgcolor=c_bg, text_size=size.tiny)
+
+    // QWave
+    table.cell(t, 0, 6, "🌊 QWave Score", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 6, str.tostring(d_qwave_score, "#.#"), text_color=f_val_color(ok_qwave_score), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 6, "±100", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 6, str.tostring(v_qwave, "#.#"), text_color=v_qwave > 0 ? color.green : v_qwave < 0 ? color.red : c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 6, f_status(ok_qwave_score), bgcolor=c_bg, text_size=size.tiny)
+
+    // QBands
+    table.cell(t, 0, 7, "📊 QBands Pos", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 7, str.tostring(d_qbands_pos, "#"), text_color=f_val_color(ok_qbands_pos), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 7, "±3", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 7, str.tostring(v_qbands, "#.#"), text_color=v_qbands > 0 ? color.green : v_qbands < 0 ? color.red : c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 7, f_status(ok_qbands_pos), bgcolor=c_bg, text_size=size.tiny)
+
+    table.cell(t, 0, 8, "📊 QBands Fire", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 8, str.tostring(d_qbands_fire, "#"), text_color=f_val_color(ok_qbands_fire), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 8, "-1/0/1", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 8, "", bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 8, f_status(ok_qbands_fire), bgcolor=c_bg, text_size=size.tiny)
+
+    // Moneyball
+    table.cell(t, 0, 9, "💰 MB Value", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 9, str.tostring(d_mb_val, "#.#"), text_color=f_val_color(ok_mb_val), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 9, "±200", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 9, str.tostring(v_mb, "#.#"), text_color=v_mb > 0 ? color.green : v_mb < 0 ? color.red : c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 9, f_status(ok_mb_val), bgcolor=c_bg, text_size=size.tiny)
+
+    table.cell(t, 0, 10, "💰 MB Zone", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 10, str.tostring(d_mb_zone, "#"), text_color=f_val_color(ok_mb_zone), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 10, "1-7", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 10, "", bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 10, f_status(ok_mb_zone), bgcolor=c_bg, text_size=size.tiny)
+
+    // QMomentum
+    table.cell(t, 0, 11, "⚡ QMom RSI", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 11, str.tostring(d_qmom_rsi, "#.#"), text_color=f_val_color(ok_qmom_rsi), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 11, "0-100", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 11, str.tostring(v_qmom, "#.#"), text_color=v_qmom > 0 ? color.green : v_qmom < 0 ? color.red : c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 11, f_status(ok_qmom_rsi), bgcolor=c_bg, text_size=size.tiny)
+
+    table.cell(t, 0, 12, "⚡ QMom Div", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 12, str.tostring(d_qmom_div, "#.##"), text_color=f_val_color(ok_qmom_div), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 12, "±5", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 12, "", bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 12, f_status(ok_qmom_div), bgcolor=c_bg, text_size=size.tiny)
+
+    // QCVD
+    table.cell(t, 0, 13, "📦 QCVD Trend", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 13, str.tostring(d_qcvd_trend, "#"), text_color=f_val_color(ok_qcvd_trend), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 13, "-1/1", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 13, str.tostring(v_qcvd, "#.#"), text_color=v_qcvd > 0 ? color.green : v_qcvd < 0 ? color.red : c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 13, f_status(ok_qcvd_trend), bgcolor=c_bg, text_size=size.tiny)
+
+    table.cell(t, 0, 14, "📦 QCVD Spike", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 14, str.tostring(d_qcvd_spike, "#"), text_color=f_val_color(ok_qcvd_spike), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 14, "-1/0/1", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 14, "", bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 14, f_status(ok_qcvd_spike), bgcolor=c_bg, text_size=size.tiny)
+
+    // QSMC
+    table.cell(t, 0, 15, "🏛 QSMC Struct", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 15, str.tostring(d_qsmc_struct, "#"), text_color=f_val_color(ok_qsmc_struct), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 15, "-1/0/1", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 15, str.tostring(v_qsmc, "#.#"), text_color=v_qsmc > 0 ? color.green : v_qsmc < 0 ? color.red : c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 15, f_status(ok_qsmc_struct), bgcolor=c_bg, text_size=size.tiny)
+
+    table.cell(t, 0, 16, "🏛 QSMC BOS", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 16, str.tostring(d_qsmc_bos, "#"), text_color=f_val_color(ok_qsmc_bos), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 16, "-1/0/1", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 16, "", bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 16, f_status(ok_qsmc_bos), bgcolor=c_bg, text_size=size.tiny)
+
+    table.cell(t, 0, 17, "🏛 QSMC CHoCH", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 17, str.tostring(d_qsmc_choch, "#"), text_color=f_val_color(ok_qsmc_choch), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 17, "-1/0/1", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 17, "", bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 17, f_status(ok_qsmc_choch), bgcolor=c_bg, text_size=size.tiny)
+
+    // QGrid
+    table.cell(t, 0, 18, "📐 QGrid VWAP", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 18, str.tostring(d_qgrid_vwap, "#"), text_color=f_val_color(ok_qgrid_vwap), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 18, "-1/1", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 18, str.tostring(v_qgrid, "#.#"), text_color=v_qgrid > 0 ? color.green : v_qgrid < 0 ? color.red : c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 18, f_status(ok_qgrid_vwap), bgcolor=c_bg, text_size=size.tiny)
+
+    table.cell(t, 0, 19, "📐 QGrid Res", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 19, str.tostring(d_qgrid_res, format.mintick), text_color=f_val_color(ok_qgrid_res), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 19, "price", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 19, "", bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 19, f_status(ok_qgrid_res), bgcolor=c_bg, text_size=size.tiny)
+
+    table.cell(t, 0, 20, "📐 QGrid Sup", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 1, 20, str.tostring(d_qgrid_sup, format.mintick), text_color=f_val_color(ok_qgrid_sup), bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 2, 20, "price", text_color=c_txt, bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 3, 20, "", bgcolor=c_bg, text_size=size.tiny)
+    table.cell(t, 4, 20, f_status(ok_qgrid_sup), bgcolor=c_bg, text_size=size.tiny)
+
+    // ── Summary Row ──
+    table.cell(t, 0, 21, "", bgcolor=c_hdr, text_size=size.tiny)
+    table.cell(t, 1, 21, "", bgcolor=c_hdr, text_size=size.tiny)
+    table.cell(t, 2, 21, "", bgcolor=c_hdr, text_size=size.tiny)
+    table.cell(t, 3, 21, "", bgcolor=c_hdr, text_size=size.tiny)
+    table.cell(t, 4, 21, "", bgcolor=c_hdr, text_size=size.tiny)
+
+    table.cell(t, 0, 22, "TOTAL SCORE", text_color=color.white, bgcolor=color.new(#16213e, 0), text_size=size.small)
+    table.cell(t, 1, 22, str.tostring(v_total, "#.##"), text_color=v_total > 0 ? color.green : v_total < 0 ? color.red : color.white,
+         bgcolor=color.new(#16213e, 0), text_size=size.small)
+    table.cell(t, 2, 22, v_dir, text_color=v_dir == "CALL" ? color.green : v_dir == "PUT" ? color.red : color.gray,
+         bgcolor=color.new(#16213e, 0), text_size=size.small)
+    table.cell(t, 3, 22, str.tostring(valid_count) + "/" + str.tostring(total_sources), text_color=color.white,
+         bgcolor=color.new(#16213e, 0), text_size=size.small)
+    table.cell(t, 4, 22, valid_count == total_sources ? "✅" : "❌",
+         bgcolor=color.new(#16213e, 0), text_size=size.small)
+
+// Plot total for reference
+plot(v_total, "Debug Total Score", color=v_total > 0 ? color.green : color.red, linewidth=2)
+hline(6.0, "CALL Threshold", color=color.new(color.green, 70), linestyle=hline.style_dashed)
+hline(-6.0, "PUT Threshold", color=color.new(color.red, 70), linestyle=hline.style_dashed)
+hline(0, "Zero", color=color.new(color.gray, 80))

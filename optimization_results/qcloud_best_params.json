@@ -1,0 +1,552 @@
+{
+  "SPY": {
+    "1min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.793963254593176,
+      "whipsaw_rate": 0.09142607174103237,
+      "avg_trend_duration": 46.49671772428884,
+      "squeeze_accuracy": 0.01555023923444976,
+      "composite_score": 0.757363157057521,
+      "total_flips": 2286,
+      "bars_tested": 106329
+    },
+    "5min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7973621103117506,
+      "whipsaw_rate": 0.09558067831449127,
+      "avg_trend_duration": 47.6611825192802,
+      "squeeze_accuracy": 0.14954682779456194,
+      "composite_score": 0.7776135931996743,
+      "total_flips": 1946,
+      "bars_tested": 92732
+    },
+    "15min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.8153768335862418,
+      "whipsaw_rate": 0.08497723823975721,
+      "avg_trend_duration": 47.53039513677812,
+      "squeeze_accuracy": 0.3694690265486726,
+      "composite_score": 0.8195579361775462,
+      "total_flips": 659,
+      "bars_tested": 31386
+    },
+    "1hr": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7954911433172303,
+      "whipsaw_rate": 0.12077294685990338,
+      "avg_trend_duration": 38.05339805825243,
+      "squeeze_accuracy": 0.8918918918918919,
+      "composite_score": 0.8771580782977997,
+      "total_flips": 207,
+      "bars_tested": 7866
+    }
+  },
+  "QQQ": {
+    "1min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.8072305974316025,
+      "whipsaw_rate": 0.10552763819095477,
+      "avg_trend_duration": 46.26560536237955,
+      "squeeze_accuracy": 0.03841463414634146,
+      "composite_score": 0.7619109946752733,
+      "total_flips": 2388,
+      "bars_tested": 110527
+    },
+    "5min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7799654576856648,
+      "whipsaw_rate": 0.11191709844559586,
+      "avg_trend_duration": 48.5137376879212,
+      "squeeze_accuracy": 0.24562737642585553,
+      "composite_score": 0.7818527420424621,
+      "total_flips": 1930,
+      "bars_tested": 93614
+    },
+    "15min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7950617283950617,
+      "whipsaw_rate": 0.09185185185185185,
+      "avg_trend_duration": 46.37240356083086,
+      "squeeze_accuracy": 0.5676274944567627,
+      "composite_score": 0.840452766143823,
+      "total_flips": 675,
+      "bars_tested": 31380
+    },
+    "1hr": {
+      "base_length": 15,
+      "step_mult": 1.7,
+      "smoothing": 3,
+      "flip_accuracy": 0.7986463620981388,
+      "whipsaw_rate": 0.116751269035533,
+      "avg_trend_duration": 39.94897959183673,
+      "squeeze_accuracy": 0.9324324324324325,
+      "composite_score": 0.8902032743403301,
+      "total_flips": 197,
+      "bars_tested": 7851
+    }
+  },
+  "TSLA": {
+    "1min": {
+      "base_length": 15,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7994682339770501,
+      "whipsaw_rate": 0.1070528967254408,
+      "avg_trend_duration": 47.79798404031919,
+      "squeeze_accuracy": 0.2415954415954416,
+      "composite_score": 0.7859300411485796,
+      "total_flips": 2382,
+      "bars_tested": 113856
+    },
+    "5min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7800925925925926,
+      "whipsaw_rate": 0.11057692307692307,
+      "avg_trend_duration": 50.264564404062,
+      "squeeze_accuracy": 0.7313311688311688,
+      "composite_score": 0.8550878519628519,
+      "total_flips": 1872,
+      "bars_tested": 94065
+    },
+    "15min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7710049423393741,
+      "whipsaw_rate": 0.10873146622734761,
+      "avg_trend_duration": 51.50990099009901,
+      "squeeze_accuracy": 0.9384965831435079,
+      "composite_score": 0.8834433507334702,
+      "total_flips": 607,
+      "bars_tested": 31386
+    },
+    "1hr": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.8126126126126126,
+      "whipsaw_rate": 0.10270270270270271,
+      "avg_trend_duration": 42.13586956521739,
+      "squeeze_accuracy": 1.0,
+      "composite_score": 0.9087387387387388,
+      "total_flips": 185,
+      "bars_tested": 7851
+    }
+  },
+  "NVDA": {
+    "1min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7800925925925926,
+      "whipsaw_rate": 0.10743464052287582,
+      "avg_trend_duration": 47.29832447895382,
+      "squeeze_accuracy": 0.17035775127768313,
+      "composite_score": 0.7717274099683409,
+      "total_flips": 2448,
+      "bars_tested": 115882
+    },
+    "5min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7919674255043495,
+      "whipsaw_rate": 0.09217101610216547,
+      "avg_trend_duration": 52.02777777777778,
+      "squeeze_accuracy": 0.6512539184952978,
+      "composite_score": 0.8518339326752755,
+      "total_flips": 1801,
+      "bars_tested": 93906
+    },
+    "15min": {
+      "base_length": 16,
+      "step_mult": 1.6,
+      "smoothing": 3,
+      "flip_accuracy": 0.7861728395061728,
+      "whipsaw_rate": 0.0874074074074074,
+      "avg_trend_duration": 46.41246290801187,
+      "squeeze_accuracy": 0.8976660682226212,
+      "composite_score": 0.879953032856323,
+      "total_flips": 675,
+      "bars_tested": 31378
+    },
+    "1hr": {
+      "base_length": 15,
+      "step_mult": 1.6,
+      "smoothing": 3,
+      "flip_accuracy": 0.8854700854700854,
+      "whipsaw_rate": 0.035897435897435895,
+      "avg_trend_duration": 40.365979381443296,
+      "squeeze_accuracy": 0.993103448275862,
+      "composite_score": 0.9265361708641462,
+      "total_flips": 195,
+      "bars_tested": 7851
+    }
+  },
+  "META": {
+    "1min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7737556561085972,
+      "whipsaw_rate": 0.10237556561085973,
+      "avg_trend_duration": 47.26315789473684,
+      "squeeze_accuracy": 0.16039156626506024,
+      "composite_score": 0.7692793231750531,
+      "total_flips": 1768,
+      "bars_tested": 83560
+    },
+    "5min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7929019955415896,
+      "whipsaw_rate": 0.08687381103360811,
+      "avg_trend_duration": 51.09263959390863,
+      "squeeze_accuracy": 0.5651041666666666,
+      "composite_score": 0.8405628706811542,
+      "total_flips": 1577,
+      "bars_tested": 80536
+    },
+    "15min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.8035207268597387,
+      "whipsaw_rate": 0.0868824531516184,
+      "avg_trend_duration": 50.94027303754266,
+      "squeeze_accuracy": 0.816933638443936,
+      "composite_score": 0.8820516868795943,
+      "total_flips": 587,
+      "bars_tested": 29938
+    },
+    "1hr": {
+      "base_length": 15,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.8322717622080681,
+      "whipsaw_rate": 0.12101910828025478,
+      "avg_trend_duration": 49.15384615384615,
+      "squeeze_accuracy": 0.9734513274336283,
+      "composite_score": 0.9070580388178043,
+      "total_flips": 157,
+      "bars_tested": 7823
+    }
+  },
+  "NFLX": {
+    "1min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7653246282190788,
+      "whipsaw_rate": 0.10990206746463548,
+      "avg_trend_duration": 46.0342950462711,
+      "squeeze_accuracy": 0.15199449793672629,
+      "composite_score": 0.7631872777010277,
+      "total_flips": 1838,
+      "bars_tested": 84611
+    },
+    "5min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7991693709681088,
+      "whipsaw_rate": 0.08110236220472442,
+      "avg_trend_duration": 47.744680851063826,
+      "squeeze_accuracy": 0.652267818574514,
+      "composite_score": 0.857273862073834,
+      "total_flips": 1270,
+      "bars_tested": 60681
+    },
+    "15min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7796030116358659,
+      "whipsaw_rate": 0.0944558521560575,
+      "avg_trend_duration": 48.281893004115226,
+      "squeeze_accuracy": 0.8582887700534759,
+      "composite_score": 0.87799040654156,
+      "total_flips": 487,
+      "bars_tested": 23713
+    },
+    "1hr": {
+      "base_length": 15,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.8156028368794326,
+      "whipsaw_rate": 0.06382978723404255,
+      "avg_trend_duration": 49.35,
+      "squeeze_accuracy": 1.0,
+      "composite_score": 0.9195035460992907,
+      "total_flips": 141,
+      "bars_tested": 7033
+    }
+  },
+  "AAPL": {
+    "1min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7673183267334114,
+      "whipsaw_rate": 0.09128205128205129,
+      "avg_trend_duration": 45.07850179579271,
+      "squeeze_accuracy": 0.10858257477243173,
+      "composite_score": 0.7620282877520459,
+      "total_flips": 1950,
+      "bars_tested": 87876
+    },
+    "5min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7917337627482556,
+      "whipsaw_rate": 0.09769189479334407,
+      "avg_trend_duration": 48.546186895810955,
+      "squeeze_accuracy": 0.39057971014492754,
+      "composite_score": 0.8112707997852926,
+      "total_flips": 1863,
+      "bars_tested": 90747
+    },
+    "15min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.8130457113507962,
+      "whipsaw_rate": 0.08166409861325115,
+      "avg_trend_duration": 48.05246913580247,
+      "squeeze_accuracy": 0.7008928571428571,
+      "composite_score": 0.8692839028908944,
+      "total_flips": 649,
+      "bars_tested": 31280
+    },
+    "1hr": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.8046709129511678,
+      "whipsaw_rate": 0.12101910828025478,
+      "avg_trend_duration": 50.166666666666664,
+      "squeeze_accuracy": 0.990990990990991,
+      "composite_score": 0.9000286911114936,
+      "total_flips": 157,
+      "bars_tested": 7851
+    }
+  },
+  "GOOGL": {
+    "1min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.8078474514118078,
+      "whipsaw_rate": 0.10121012101210121,
+      "avg_trend_duration": 48.37754540451294,
+      "squeeze_accuracy": 0.18745387453874537,
+      "composite_score": 0.7855621589219192,
+      "total_flips": 1818,
+      "bars_tested": 88012
+    },
+    "5min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.8002263723825694,
+      "whipsaw_rate": 0.09960384833050367,
+      "avg_trend_duration": 49.31087202718007,
+      "squeeze_accuracy": 0.4812260536398467,
+      "composite_score": 0.8273621762972503,
+      "total_flips": 1767,
+      "bars_tested": 87257
+    },
+    "15min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7895545314900154,
+      "whipsaw_rate": 0.09523809523809523,
+      "avg_trend_duration": 47.286153846153844,
+      "squeeze_accuracy": 0.8194444444444444,
+      "composite_score": 0.8754512288786482,
+      "total_flips": 651,
+      "bars_tested": 31004
+    },
+    "1hr": {
+      "base_length": 15,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7641325536062379,
+      "whipsaw_rate": 0.07602339181286549,
+      "avg_trend_duration": 45.49411764705882,
+      "squeeze_accuracy": 0.9805825242718447,
+      "composite_score": 0.8925548076011942,
+      "total_flips": 171,
+      "bars_tested": 7850
+    }
+  },
+  "MSFT": {
+    "1min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.8047726418639609,
+      "whipsaw_rate": 0.1020293122886133,
+      "avg_trend_duration": 47.582064297800336,
+      "squeeze_accuracy": 0.10729023383768914,
+      "composite_score": 0.7722566316558863,
+      "total_flips": 1774,
+      "bars_tested": 84428
+    },
+    "5min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7842370039128005,
+      "whipsaw_rate": 0.10335195530726257,
+      "avg_trend_duration": 45.95863610955841,
+      "squeeze_accuracy": 0.3723076923076923,
+      "composite_score": 0.8044911163888184,
+      "total_flips": 1790,
+      "bars_tested": 82226
+    },
+    "15min": {
+      "base_length": 15,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.815279958137101,
+      "whipsaw_rate": 0.09262166405023547,
+      "avg_trend_duration": 47.617924528301884,
+      "squeeze_accuracy": 0.6367432150313153,
+      "composite_score": 0.8537732339800609,
+      "total_flips": 637,
+      "bars_tested": 30438
+    },
+    "1hr": {
+      "base_length": 15,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7846790890269152,
+      "whipsaw_rate": 0.11180124223602485,
+      "avg_trend_duration": 47.8625,
+      "squeeze_accuracy": 0.9459459459459459,
+      "composite_score": 0.885454262492306,
+      "total_flips": 161,
+      "bars_tested": 7850
+    }
+  },
+  "AMZN": {
+    "1min": {
+      "base_length": 15,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7756593581188432,
+      "whipsaw_rate": 0.09628217349857007,
+      "avg_trend_duration": 44.66046733428708,
+      "squeeze_accuracy": 0.1515527950310559,
+      "composite_score": 0.7701431512216109,
+      "total_flips": 2098,
+      "bars_tested": 93732
+    },
+    "5min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.802675585284281,
+      "whipsaw_rate": 0.10813823857302118,
+      "avg_trend_duration": 50.34969325153374,
+      "squeeze_accuracy": 0.4682730923694779,
+      "composite_score": 0.8241428590616647,
+      "total_flips": 1794,
+      "bars_tested": 90357
+    },
+    "15min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7937007874015748,
+      "whipsaw_rate": 0.10551181102362205,
+      "avg_trend_duration": 48.41955835962145,
+      "squeeze_accuracy": 0.7933491686460807,
+      "composite_score": 0.8704196981315577,
+      "total_flips": 635,
+      "bars_tested": 31250
+    },
+    "1hr": {
+      "base_length": 15,
+      "step_mult": 1.7,
+      "smoothing": 3,
+      "flip_accuracy": 0.8444444444444444,
+      "whipsaw_rate": 0.07878787878787878,
+      "avg_trend_duration": 47.048780487804876,
+      "squeeze_accuracy": 0.9928057553956835,
+      "composite_score": 0.9156331077045237,
+      "total_flips": 165,
+      "bars_tested": 7851
+    }
+  },
+  "AMD": {
+    "1min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7719816272965879,
+      "whipsaw_rate": 0.10974409448818898,
+      "avg_trend_duration": 49.19891678975874,
+      "squeeze_accuracy": 0.3258807588075881,
+      "composite_score": 0.7916396597528966,
+      "total_flips": 2032,
+      "bars_tested": 100013
+    },
+    "5min": {
+      "base_length": 16,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7928502415458937,
+      "whipsaw_rate": 0.09154113557358054,
+      "avg_trend_duration": 53.318260869565215,
+      "squeeze_accuracy": 0.7093117408906883,
+      "composite_score": 0.8610090617812708,
+      "total_flips": 1726,
+      "bars_tested": 91982
+    },
+    "15min": {
+      "base_length": 15,
+      "step_mult": 1.8,
+      "smoothing": 3,
+      "flip_accuracy": 0.7854341736694678,
+      "whipsaw_rate": 0.08235294117647059,
+      "avg_trend_duration": 52.562289562289564,
+      "squeeze_accuracy": 0.9314159292035398,
+      "composite_score": 0.8898173606619728,
+      "total_flips": 595,
+      "bars_tested": 31318
+    },
+    "1hr": {
+      "base_length": 16,
+      "step_mult": 1.7,
+      "smoothing": 3,
+      "flip_accuracy": 0.7777777777777778,
+      "whipsaw_rate": 0.07878787878787878,
+      "avg_trend_duration": 47.06707317073171,
+      "squeeze_accuracy": 1.0,
+      "composite_score": 0.8902685310718833,
+      "total_flips": 165,
+      "bars_tested": 7851
+    }
+  }
+}

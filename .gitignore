@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment files (NEVER commit secrets)
+.env
+.env.local
+.env.production
+
+# ML Models (synced from S3, too large for git)
+backend/models/**/*.pt
+backend/models/**/*.json
+backend/models/**/*.pkl
+!backend/models/config/*.json
+!backend/models/.gitkeep
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# AWS
+.aws/
+
+# Schwab tokens (NEVER commit)
+token.json
+schwab_token.json

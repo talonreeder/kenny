@@ -1,0 +1,324 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © YELENA AI Trading Platform
+
+//@version=6
+indicator("YELENA v2: QGrid - Dynamic S/R Grid", shorttitle="QGrid", overlay=true, max_lines_count=500, max_labels_count=500)
+
+// ============================================================================
+// QGRID v2 — DYNAMIC SUPPORT/RESISTANCE WITH VWAP
+// ============================================================================
+// Auto-generates S/R levels from swing highs/lows with clustering.
+// Multiple touches at similar prices create stronger levels.
+// VWAP provides the dynamic "fair value" anchor.
+//
+// v2 ENHANCEMENTS:
+//   1. Auto-optimized pivot detection per symbol/timeframe
+//   2. Level clustering (nearby swings merge into stronger levels)
+//   3. Touch count and strength scoring
+//   4. VWAP integration as central pivot
+//   5. Level expiry (old untested levels removed)
+//   6. Info table with nearest S/R and VWAP
+//   7. Hidden plot exports for Master Confluence
+//   8. Enhanced webhook payload
+// ============================================================================
+
+// ==================== AUTO-OPTIMIZATION ENGINE ====================
+tf_seconds = timeframe.in_seconds(timeframe.period)
+string tf_group = tf_seconds <= 60 ? "scalp" : tf_seconds <= 900 ? "intraday" : "swing"
+
+string settings_mode = input.string("Auto", "Settings Mode", options=["Auto", "Manual"], group="⚙️ Settings Mode")
+
+int manual_left_bars = input.int(5, "Left Bars (Pivot)", minval=2, maxval=15, group="🔧 Manual Settings")
+int manual_right_bars = input.int(3, "Right Bars (Pivot)", minval=1, maxval=10, group="🔧 Manual Settings")
+
+bool show_resistance = input.bool(true, "Show Resistance Levels", group="🎨 Visuals")
+bool show_support = input.bool(true, "Show Support Levels", group="🎨 Visuals")
+bool show_vwap = input.bool(true, "Show VWAP", group="🎨 Visuals")
+bool show_level_labels = input.bool(true, "Show Level Labels", group="🎨 Visuals")
+string table_position = input.string("Top Right", "Info Table Position", options=["Top Right", "Top Left", "Bottom Right", "Bottom Left"], group="🎨 Visuals")
+
+float cluster_atr_mult = input.float(0.5, "Cluster Distance (ATR mult)", minval=0.1, maxval=2.0, step=0.1, group="📐 Levels")
+int max_levels = input.int(8, "Max Levels Shown", minval=2, maxval=20, group="📐 Levels")
+int level_expiry = input.int(100, "Level Expiry (bars)", minval=20, maxval=500, group="📐 Levels")
+
+string passphrase = input.string("", "Webhook Passphrase", group="🔔 Alerts")
+
+// ==================== AUTO-OPTIMIZATION LOOKUP TABLES ====================
+// Placeholder values — replaced after: python -m scripts.optimize_params --indicator qgrid
+
+f_auto_left_bars() =>
+    string t = syminfo.ticker
+    if t == "SPY" or t == "QQQ"
+        tf_group == "scalp" ? 4 : tf_group == "intraday" ? 5 : 7
+    else if t == "TSLA" or t == "NVDA"
+        tf_group == "scalp" ? 3 : tf_group == "intraday" ? 5 : 7
+    else if t == "META" or t == "NFLX"
+        tf_group == "scalp" ? 4 : tf_group == "intraday" ? 5 : 7
+    else if t == "AAPL" or t == "GOOGL" or t == "MSFT" or t == "AMZN" or t == "AMD"
+        tf_group == "scalp" ? 4 : tf_group == "intraday" ? 5 : 7
+    else
+        tf_group == "scalp" ? 4 : tf_group == "intraday" ? 5 : 7
+
+f_auto_right_bars() =>
+    string t = syminfo.ticker
+    if t == "TSLA" or t == "NVDA"
+        tf_group == "scalp" ? 2 : tf_group == "intraday" ? 3 : 4
+    else
+        tf_group == "scalp" ? 3 : tf_group == "intraday" ? 3 : 4
+
+int left_bars = settings_mode == "Auto" ? f_auto_left_bars() : manual_left_bars
+int right_bars = settings_mode == "Auto" ? f_auto_right_bars() : manual_right_bars
+
+// Fixed
+int atr_length = 14
+
+// ==================== CORE CALCULATIONS ====================
+
+float atr_val = ta.atr(atr_length)
+
+// --- VWAP ---
+float vwap_val = ta.vwap(hlc3)
+
+// --- Swing detection ---
+float ph = ta.pivothigh(high, left_bars, right_bars)
+float pl = ta.pivotlow(low, left_bars, right_bars)
+
+// ==================== LEVEL MANAGEMENT ====================
+// Store S/R levels with clustering
+var array<float> level_price = array.new_float()
+var array<int> level_touches = array.new_int()
+var array<int> level_last_bar = array.new_int()
+var array<int> level_type = array.new_int()  // 1=resistance, -1=support
+var array<line> level_lines = array.new_line()
+var array<label> level_labels = array.new_label()
+
+// Helper: find if a level already exists near this price
+f_find_cluster(price) =>
+    int found = -1
+    float cluster_dist = cluster_atr_mult * nz(atr_val, 1.0)
+    if array.size(level_price) > 0
+        for i = 0 to array.size(level_price) - 1
+            if math.abs(array.get(level_price, i) - price) < cluster_dist
+                found := i
+                break
+    found
+
+// Add new swing high as resistance
+if not na(ph)
+    int cluster_idx = f_find_cluster(ph)
+    if cluster_idx >= 0
+        // Merge: update price to average, increment touches
+        float old_price = array.get(level_price, cluster_idx)
+        int old_touches = array.get(level_touches, cluster_idx)
+        float new_price = (old_price * old_touches + ph) / (old_touches + 1)
+        array.set(level_price, cluster_idx, new_price)
+        array.set(level_touches, cluster_idx, old_touches + 1)
+        array.set(level_last_bar, cluster_idx, bar_index)
+    else
+        array.push(level_price, ph)
+        array.push(level_touches, 1)
+        array.push(level_last_bar, bar_index)
+        array.push(level_type, 1)
+        array.push(level_lines, line(na))
+        array.push(level_labels, label(na))
+
+// Add new swing low as support
+if not na(pl)
+    int cluster_idx = f_find_cluster(pl)
+    if cluster_idx >= 0
+        float old_price = array.get(level_price, cluster_idx)
+        int old_touches = array.get(level_touches, cluster_idx)
+        float new_price = (old_price * old_touches + pl) / (old_touches + 1)
+        array.set(level_price, cluster_idx, new_price)
+        array.set(level_touches, cluster_idx, old_touches + 1)
+        array.set(level_last_bar, cluster_idx, bar_index)
+    else
+        array.push(level_price, pl)
+        array.push(level_touches, 1)
+        array.push(level_last_bar, bar_index)
+        array.push(level_type, -1)
+        array.push(level_lines, line(na))
+        array.push(level_labels, label(na))
+
+// ==================== LEVEL CLEANUP & RENDERING ====================
+// Remove expired levels, keep top N by strength
+if array.size(level_price) > 0
+    // Remove expired
+    for i = array.size(level_price) - 1 to 0
+        int age = bar_index - array.get(level_last_bar, i)
+        if age > level_expiry
+            line.delete(array.get(level_lines, i))
+            label.delete(array.get(level_labels, i))
+            array.remove(level_price, i)
+            array.remove(level_touches, i)
+            array.remove(level_last_bar, i)
+            array.remove(level_type, i)
+            array.remove(level_lines, i)
+            array.remove(level_labels, i)
+
+    // If too many levels, remove weakest
+    while array.size(level_price) > max_levels * 2
+        // Find weakest (fewest touches, oldest)
+        int weakest = 0
+        int min_score = 9999
+        for i = 0 to array.size(level_price) - 1
+            int score = array.get(level_touches, i) * 100 - (bar_index - array.get(level_last_bar, i))
+            if score < min_score
+                min_score := score
+                weakest := i
+        line.delete(array.get(level_lines, weakest))
+        label.delete(array.get(level_labels, weakest))
+        array.remove(level_price, weakest)
+        array.remove(level_touches, weakest)
+        array.remove(level_last_bar, weakest)
+        array.remove(level_type, weakest)
+        array.remove(level_lines, weakest)
+        array.remove(level_labels, weakest)
+
+// ==================== FIND NEAREST S/R ====================
+var float nearest_r = na
+var float nearest_s = na
+var int nearest_r_touches = 0
+var int nearest_s_touches = 0
+
+nearest_r := na
+nearest_s := na
+nearest_r_touches := 0
+nearest_s_touches := 0
+
+if array.size(level_price) > 0
+    float min_r_dist = 999999.0
+    float min_s_dist = 999999.0
+    for i = 0 to array.size(level_price) - 1
+        float lp = array.get(level_price, i)
+        int lt = array.get(level_type, i)
+        float dist = math.abs(lp - close)
+
+        if lp > close  // Above = resistance
+            if dist < min_r_dist
+                min_r_dist := dist
+                nearest_r := lp
+                nearest_r_touches := array.get(level_touches, i)
+        else  // Below = support
+            if dist < min_s_dist
+                min_s_dist := dist
+                nearest_s := lp
+                nearest_s_touches := array.get(level_touches, i)
+
+// ==================== SIGNAL DETECTION ====================
+// VWAP crosses
+bool crossed_above_vwap = close > vwap_val and close[1] <= vwap_val
+bool crossed_below_vwap = close < vwap_val and close[1] >= vwap_val
+
+// Level approach/break detection (using nearest levels)
+float approach_dist = 0.3 * nz(atr_val, 1.0)
+bool approaching_resistance = not na(nearest_r) and (nearest_r - close) < approach_dist and close < nearest_r
+bool approaching_support = not na(nearest_s) and (close - nearest_s) < approach_dist and close > nearest_s
+bool broke_resistance = not na(nearest_r) and close > nearest_r and close[1] <= nz(nearest_r)
+bool broke_support = not na(nearest_s) and close < nearest_s and close[1] >= nz(nearest_s)
+
+// Level density: how many levels within 1 ATR
+int level_density = 0
+if array.size(level_price) > 0 and atr_val > 0
+    for i = 0 to array.size(level_price) - 1
+        if math.abs(array.get(level_price, i) - close) < atr_val
+            level_density += 1
+
+// ==================== VISUAL RENDERING ====================
+// Draw/update level lines
+if barstate.islast and array.size(level_price) > 0
+    for i = 0 to array.size(level_price) - 1
+        float lp = array.get(level_price, i)
+        int lt = array.get(level_type, i)
+        int touches = array.get(level_touches, i)
+
+        bool is_r = lp > close
+        bool show_it = (is_r and show_resistance) or (not is_r and show_support)
+
+        // Delete old
+        line.delete(array.get(level_lines, i))
+        label.delete(array.get(level_labels, i))
+
+        if show_it
+            // Color and width by strength
+            int strength = math.min(touches, 5)
+            int lw = strength >= 3 ? 2 : 1
+            int transp_val = 80 - strength * 12  // More touches = more opaque
+            color line_color = is_r ? color.new(#F44336, transp_val) : color.new(#4CAF50, transp_val)
+
+            line new_line = line.new(bar_index - 50, lp, bar_index + 10, lp, color=line_color, width=lw, style=touches >= 3 ? line.style_solid : line.style_dotted)
+            array.set(level_lines, i, new_line)
+
+            if show_level_labels
+                string stars = touches >= 5 ? "★★★★★" : touches >= 4 ? "★★★★" : touches >= 3 ? "★★★" : touches >= 2 ? "★★" : "★"
+                string lvl_text = (is_r ? "R" : "S") + " " + str.tostring(lp, format.mintick) + " " + stars
+                label new_label = label.new(bar_index + 12, lp, lvl_text, style=is_r ? label.style_label_left : label.style_label_left, color=color.new(color.black, 80), textcolor=is_r ? color.red : color.green, size=size.tiny)
+                array.set(level_labels, i, new_label)
+
+// VWAP line
+plot(show_vwap ? vwap_val : na, "VWAP", color=color.new(#FFD600, 30), linewidth=2, style=plot.style_line)
+
+// ==================== INFO TABLE ====================
+string tbl_pos = switch table_position
+    "Top Right" => position.top_right
+    "Top Left" => position.top_left
+    "Bottom Right" => position.bottom_right
+    "Bottom Left" => position.bottom_left
+    => position.top_right
+
+var table info_table = table.new(tbl_pos, 2, 7, bgcolor=color.new(color.black, 80), border_width=1)
+
+if barstate.islast
+    table.cell(info_table, 0, 0, "QGrid v2", text_color=color.white, text_size=size.small)
+    table.cell(info_table, 1, 0, "", text_size=size.small)
+
+    // Nearest resistance
+    table.cell(info_table, 0, 1, "Nearest R", text_color=color.gray, text_size=size.tiny)
+    string r_text = not na(nearest_r) ? str.tostring(nearest_r, format.mintick) + " (" + str.tostring(nearest_r_touches) + "t)" : "—"
+    table.cell(info_table, 1, 1, r_text, text_color=color.red, text_size=size.small)
+
+    // Nearest support
+    table.cell(info_table, 0, 2, "Nearest S", text_color=color.gray, text_size=size.tiny)
+    string s_text = not na(nearest_s) ? str.tostring(nearest_s, format.mintick) + " (" + str.tostring(nearest_s_touches) + "t)" : "—"
+    table.cell(info_table, 1, 2, s_text, text_color=color.green, text_size=size.small)
+
+    // VWAP
+    table.cell(info_table, 0, 3, "VWAP", text_color=color.gray, text_size=size.tiny)
+    string vwap_side = close > vwap_val ? "ABOVE" : "BELOW"
+    color vwap_color = close > vwap_val ? color.green : color.red
+    table.cell(info_table, 1, 3, str.tostring(vwap_val, format.mintick) + " (" + vwap_side + ")", text_color=vwap_color, text_size=size.small)
+
+    // Active levels
+    table.cell(info_table, 0, 4, "Active Levels", text_color=color.gray, text_size=size.tiny)
+    table.cell(info_table, 1, 4, str.tostring(array.size(level_price)), text_color=color.white, text_size=size.small)
+
+    // Settings
+    table.cell(info_table, 0, 5, "Settings", text_color=color.gray, text_size=size.tiny)
+    table.cell(info_table, 1, 5, settings_mode == "Auto" ? "Auto" : "Manual", text_color=settings_mode == "Auto" ? color.lime : color.orange, text_size=size.tiny)
+
+    // Params
+    table.cell(info_table, 0, 6, "Params", text_color=color.gray, text_size=size.tiny)
+    table.cell(info_table, 1, 6, "L:" + str.tostring(left_bars) + " R:" + str.tostring(right_bars), text_color=color.gray, text_size=size.tiny)
+
+// ==================== HIDDEN PLOT EXPORTS ====================
+plot(nz(nearest_r, close + 100 * atr_val), "X_QGridResistance", display=display.none)
+plot(nz(nearest_s, close - 100 * atr_val), "X_QGridSupport", display=display.none)
+plot(vwap_val, "X_QGridVWAP", display=display.none)
+plot(close > vwap_val ? 1 : -1, "X_QGridVWAPSide", display=display.none)
+plot(level_density, "X_QGridDensity", display=display.none)
+
+// ==================== ALERTS ====================
+alertcondition(approaching_resistance, "QGrid: Approaching Resistance", "Price nearing resistance level")
+alertcondition(approaching_support, "QGrid: Approaching Support", "Price nearing support level")
+alertcondition(broke_resistance, "QGrid: Resistance Breakout", "Price broke above resistance level")
+alertcondition(broke_support, "QGrid: Support Breakdown", "Price broke below support level")
+alertcondition(crossed_above_vwap, "QGrid: VWAP Cross Up", "Price crossed above VWAP")
+alertcondition(crossed_below_vwap, "QGrid: VWAP Cross Down", "Price crossed below VWAP")
+
+// ==================== WEBHOOK ALERT ====================
+bool any_alert = broke_resistance or broke_support or crossed_above_vwap or crossed_below_vwap
+
+if any_alert
+    string alert_type = broke_resistance ? "broke_r" : broke_support ? "broke_s" : crossed_above_vwap ? "vwap_cross_up" : "vwap_cross_down"
+    string alert_msg = '{"passphrase":"' + passphrase + '","ticker":"' + syminfo.ticker + '","timeframe":"' + timeframe.period + '","indicator":"qgrid","alert_type":"' + alert_type + '","nearest_r":' + str.tostring(nz(nearest_r, 0)) + ',"nearest_s":' + str.tostring(nz(nearest_s, 0)) + ',"vwap":' + str.tostring(vwap_val, "#.##") + ',"active_levels":' + str.tostring(array.size(level_price)) + ',"level_density":' + str.tostring(level_density) + ',"settings_mode":"' + settings_mode + '","left_bars":' + str.tostring(left_bars) + ',"right_bars":' + str.tostring(right_bars) + ',"timestamp":"' + str.format_time(timenow, "yyyy-MM-dd'T'HH:mm:ss'Z'", "UTC") + '"}'
+    alert(alert_msg, alert.freq_once_per_bar_close)

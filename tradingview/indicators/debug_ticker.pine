@@ -1,0 +1,19 @@
+//@version=6
+indicator("DEBUG: Ticker Detection", overlay=true)
+
+var table debug = table.new(position.bottom_right, 2, 5, bgcolor=color.black, border_width=2, border_color=color.yellow)
+
+tf_seconds = timeframe.in_seconds(timeframe.period)
+string tf_group = tf_seconds <= 60 ? "scalp" : tf_seconds <= 900 ? "intraday" : "swing"
+
+if barstate.islast
+    table.cell(debug, 0, 0, "ticker", text_color=color.white, text_size=size.normal, bgcolor=color.black)
+    table.cell(debug, 1, 0, syminfo.ticker, text_color=color.yellow, text_size=size.normal, bgcolor=color.black)
+    table.cell(debug, 0, 1, "tickerid", text_color=color.white, text_size=size.normal, bgcolor=color.black)
+    table.cell(debug, 1, 1, syminfo.tickerid, text_color=color.yellow, text_size=size.normal, bgcolor=color.black)
+    table.cell(debug, 0, 2, "basecurrency", text_color=color.white, text_size=size.normal, bgcolor=color.black)
+    table.cell(debug, 1, 2, syminfo.basecurrency, text_color=color.yellow, text_size=size.normal, bgcolor=color.black)
+    table.cell(debug, 0, 3, "tf.period", text_color=color.white, text_size=size.normal, bgcolor=color.black)
+    table.cell(debug, 1, 3, timeframe.period, text_color=color.yellow, text_size=size.normal, bgcolor=color.black)
+    table.cell(debug, 0, 4, "tf_group", text_color=color.white, text_size=size.normal, bgcolor=color.black)
+    table.cell(debug, 1, 4, str.tostring(tf_seconds) + "s = " + tf_group, text_color=color.yellow, text_size=size.normal, bgcolor=color.black)

@@ -1,0 +1,552 @@
+{
+  "SPY": {
+    "1min": {
+      "atr_length": 18,
+      "factor": 3.5,
+      "flip_accuracy": 0.7612005696133202,
+      "whipsaw_rate": 0.07886953664147223,
+      "avg_trend_duration": 34.92307692307692,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8948947941655038,
+      "total_flips": 3043,
+      "total_bounces": 1,
+      "bars_tested": 106329
+    },
+    "5min": {
+      "atr_length": 10,
+      "factor": 3.5,
+      "flip_accuracy": 0.7925247902364608,
+      "whipsaw_rate": 0.040732265446224256,
+      "avg_trend_duration": 42.42445054945055,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.9110798303350149,
+      "total_flips": 2185,
+      "total_bounces": 2,
+      "bars_tested": 92732
+    },
+    "15min": {
+      "atr_length": 20,
+      "factor": 2.2,
+      "flip_accuracy": 0.7907219181652332,
+      "whipsaw_rate": 0.14464425332290853,
+      "avg_trend_duration": 24.49374021909233,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.7771461661175713,
+      "total_flips": 1279,
+      "total_bounces": 1,
+      "bars_tested": 31386
+    },
+    "1hr": {
+      "atr_length": 20,
+      "factor": 3.5,
+      "flip_accuracy": 0.8037037037037037,
+      "whipsaw_rate": 0.016666666666666666,
+      "avg_trend_duration": 43.54189944134078,
+      "bounce_win_rate": 0.0,
+      "composite_score": 0.7771296296296296,
+      "total_flips": 180,
+      "total_bounces": 0,
+      "bars_tested": 7866
+    }
+  },
+  "QQQ": {
+    "1min": {
+      "atr_length": 18,
+      "factor": 2.5,
+      "flip_accuracy": 0.7910993700467385,
+      "whipsaw_rate": 0.14671814671814673,
+      "avg_trend_duration": 22.448170731707318,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.7941839933055931,
+      "total_flips": 4921,
+      "total_bounces": 1,
+      "bars_tested": 110527
+    },
+    "5min": {
+      "atr_length": 14,
+      "factor": 3.5,
+      "flip_accuracy": 0.7981826877092301,
+      "whipsaw_rate": 0.047345767575322814,
+      "avg_trend_duration": 44.74162679425837,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.9156136232063138,
+      "total_flips": 2091,
+      "total_bounces": 1,
+      "bars_tested": 93614
+    },
+    "15min": {
+      "atr_length": 14,
+      "factor": 3.0,
+      "flip_accuracy": 0.7688009255507838,
+      "whipsaw_rate": 0.053426248548199766,
+      "avg_trend_duration": 36.4546511627907,
+      "bounce_win_rate": 0.8333333333333334,
+      "composite_score": 0.8360087035864269,
+      "total_flips": 861,
+      "total_bounces": 2,
+      "bars_tested": 31380
+    },
+    "1hr": {
+      "atr_length": 10,
+      "factor": 2.2,
+      "flip_accuracy": 0.775,
+      "whipsaw_rate": 0.0778816199376947,
+      "avg_trend_duration": 24.36875,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.7825670114572784,
+      "total_flips": 321,
+      "total_bounces": 1,
+      "bars_tested": 7851
+    }
+  },
+  "TSLA": {
+    "1min": {
+      "atr_length": 10,
+      "factor": 3.5,
+      "flip_accuracy": 0.765904261967254,
+      "whipsaw_rate": 0.05474315710536183,
+      "avg_trend_duration": 42.66166541635409,
+      "bounce_win_rate": 0.6666666666666666,
+      "composite_score": 0.8526927804317034,
+      "total_flips": 2667,
+      "total_bounces": 3,
+      "bars_tested": 113856
+    },
+    "5min": {
+      "atr_length": 10,
+      "factor": 2.8,
+      "flip_accuracy": 0.7819763667056226,
+      "whipsaw_rate": 0.0806388780677834,
+      "avg_trend_duration": 36.64146531566641,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8392374931299971,
+      "total_flips": 2567,
+      "total_bounces": 1,
+      "bars_tested": 94065
+    },
+    "15min": {
+      "atr_length": 8,
+      "factor": 3.0,
+      "flip_accuracy": 0.7550295857988165,
+      "whipsaw_rate": 0.0757396449704142,
+      "avg_trend_duration": 37.14099526066351,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.846683009699308,
+      "total_flips": 845,
+      "total_bounces": 1,
+      "bars_tested": 31386
+    },
+    "1hr": {
+      "atr_length": 12,
+      "factor": 3.5,
+      "flip_accuracy": 0.7931034482758621,
+      "whipsaw_rate": 0.0,
+      "avg_trend_duration": 44.48554913294798,
+      "bounce_win_rate": 0.0,
+      "composite_score": 0.7748888369919388,
+      "total_flips": 174,
+      "total_bounces": 1,
+      "bars_tested": 7851
+    }
+  },
+  "NVDA": {
+    "1min": {
+      "atr_length": 18,
+      "factor": 3.5,
+      "flip_accuracy": 0.7631545581336376,
+      "whipsaw_rate": 0.053252187143400534,
+      "avg_trend_duration": 44.05707762557078,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.9024579776108108,
+      "total_flips": 2629,
+      "total_bounces": 1,
+      "bars_tested": 115882
+    },
+    "5min": {
+      "atr_length": 10,
+      "factor": 3.5,
+      "flip_accuracy": 0.7719005196733483,
+      "whipsaw_rate": 0.03841870824053452,
+      "avg_trend_duration": 52.26016713091922,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.9080720106668055,
+      "total_flips": 1796,
+      "total_bounces": 1,
+      "bars_tested": 93906
+    },
+    "15min": {
+      "atr_length": 18,
+      "factor": 2.5,
+      "flip_accuracy": 0.7768762677484787,
+      "whipsaw_rate": 0.09026369168356999,
+      "avg_trend_duration": 31.751269035532996,
+      "bounce_win_rate": 0.6666666666666666,
+      "composite_score": 0.7549692634485536,
+      "total_flips": 986,
+      "total_bounces": 1,
+      "bars_tested": 31378
+    },
+    "1hr": {
+      "atr_length": 16,
+      "factor": 3.5,
+      "flip_accuracy": 0.8167988428350541,
+      "whipsaw_rate": 0.006097560975609756,
+      "avg_trend_duration": 47.75460122699386,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.9343552047483664,
+      "total_flips": 164,
+      "total_bounces": 1,
+      "bars_tested": 7851
+    }
+  },
+  "META": {
+    "1min": {
+      "atr_length": 12,
+      "factor": 3.5,
+      "flip_accuracy": 0.740818910932883,
+      "whipsaw_rate": 0.10046433094132545,
+      "avg_trend_duration": 35.25295608108108,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8801881823697929,
+      "total_flips": 2369,
+      "total_bounces": 1,
+      "bars_tested": 83560
+    },
+    "5min": {
+      "atr_length": 12,
+      "factor": 3.5,
+      "flip_accuracy": 0.7588755020080321,
+      "whipsaw_rate": 0.09734939759036144,
+      "avg_trend_duration": 38.80858244937319,
+      "bounce_win_rate": 0.6666666666666666,
+      "composite_score": 0.8391239908686311,
+      "total_flips": 2075,
+      "total_bounces": 1,
+      "bars_tested": 80536
+    },
+    "15min": {
+      "atr_length": 14,
+      "factor": 2.8,
+      "flip_accuracy": 0.7766586703733597,
+      "whipsaw_rate": 0.10687830687830688,
+      "avg_trend_duration": 31.671610169491526,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8283920604139269,
+      "total_flips": 945,
+      "total_bounces": 1,
+      "bars_tested": 29938
+    },
+    "1hr": {
+      "atr_length": 20,
+      "factor": 3.5,
+      "flip_accuracy": 0.7926356589147288,
+      "whipsaw_rate": 0.029069767441860465,
+      "avg_trend_duration": 45.421052631578945,
+      "bounce_win_rate": 0.6666666666666666,
+      "composite_score": 0.8669133612084762,
+      "total_flips": 172,
+      "total_bounces": 1,
+      "bars_tested": 7823
+    }
+  },
+  "NFLX": {
+    "1min": {
+      "atr_length": 10,
+      "factor": 3.0,
+      "flip_accuracy": 0.7296200663961638,
+      "whipsaw_rate": 0.09328908554572271,
+      "avg_trend_duration": 31.200295094061232,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8235769765680899,
+      "total_flips": 2712,
+      "total_bounces": 1,
+      "bars_tested": 84611
+    },
+    "5min": {
+      "atr_length": 14,
+      "factor": 3.5,
+      "flip_accuracy": 0.752913752913753,
+      "whipsaw_rate": 0.08773045136681501,
+      "avg_trend_duration": 38.51908396946565,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8874523406272192,
+      "total_flips": 1573,
+      "total_bounces": 1,
+      "bars_tested": 60681
+    },
+    "15min": {
+      "atr_length": 12,
+      "factor": 3.0,
+      "flip_accuracy": 0.7487635740140979,
+      "whipsaw_rate": 0.09379310344827586,
+      "avg_trend_duration": 32.69060773480663,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8261698831665972,
+      "total_flips": 725,
+      "total_bounces": 1,
+      "bars_tested": 23713
+    },
+    "1hr": {
+      "atr_length": 10,
+      "factor": 3.5,
+      "flip_accuracy": 0.7670250896057347,
+      "whipsaw_rate": 0.021505376344086023,
+      "avg_trend_duration": 37.75675675675676,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8979421711649157,
+      "total_flips": 186,
+      "total_bounces": 1,
+      "bars_tested": 7033
+    }
+  },
+  "AAPL": {
+    "1min": {
+      "atr_length": 20,
+      "factor": 3.5,
+      "flip_accuracy": 0.7285292538915727,
+      "whipsaw_rate": 0.11473429951690821,
+      "avg_trend_duration": 35.36327023761579,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8763016639828234,
+      "total_flips": 2484,
+      "total_bounces": 1,
+      "bars_tested": 87876
+    },
+    "5min": {
+      "atr_length": 10,
+      "factor": 3.5,
+      "flip_accuracy": 0.7605504587155963,
+      "whipsaw_rate": 0.06559633027522936,
+      "avg_trend_duration": 41.614043139054615,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8942864646269015,
+      "total_flips": 2180,
+      "total_bounces": 1,
+      "bars_tested": 90747
+    },
+    "15min": {
+      "atr_length": 8,
+      "factor": 2.5,
+      "flip_accuracy": 0.7447680818779566,
+      "whipsaw_rate": 0.1206896551724138,
+      "avg_trend_duration": 26.962036238136324,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.77361755198095,
+      "total_flips": 1160,
+      "total_bounces": 1,
+      "bars_tested": 31280
+    },
+    "1hr": {
+      "atr_length": 16,
+      "factor": 2.8,
+      "flip_accuracy": 0.7336769759450172,
+      "whipsaw_rate": 0.03608247422680412,
+      "avg_trend_duration": 40.41968911917098,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8329045531342872,
+      "total_flips": 194,
+      "total_bounces": 1,
+      "bars_tested": 7851
+    }
+  },
+  "GOOGL": {
+    "1min": {
+      "atr_length": 12,
+      "factor": 3.0,
+      "flip_accuracy": 0.7404655770183259,
+      "whipsaw_rate": 0.14319667260843733,
+      "avg_trend_duration": 26.149777117384843,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8173885227667184,
+      "total_flips": 3366,
+      "total_bounces": 1,
+      "bars_tested": 88012
+    },
+    "5min": {
+      "atr_length": 10,
+      "factor": 3.5,
+      "flip_accuracy": 0.7520722320899941,
+      "whipsaw_rate": 0.07992895204262877,
+      "avg_trend_duration": 38.736561528209684,
+      "bounce_win_rate": 0.6666666666666666,
+      "composite_score": 0.8350272465780071,
+      "total_flips": 2252,
+      "total_bounces": 1,
+      "bars_tested": 87257
+    },
+    "15min": {
+      "atr_length": 16,
+      "factor": 3.5,
+      "flip_accuracy": 0.7526115859449193,
+      "whipsaw_rate": 0.08974358974358974,
+      "avg_trend_duration": 44.05848787446505,
+      "bounce_win_rate": 0.5,
+      "composite_score": 0.8131330930240197,
+      "total_flips": 702,
+      "total_bounces": 2,
+      "bars_tested": 31004
+    },
+    "1hr": {
+      "atr_length": 14,
+      "factor": 2.5,
+      "flip_accuracy": 0.7991803278688524,
+      "whipsaw_rate": 0.040983606557377046,
+      "avg_trend_duration": 31.65843621399177,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8356017708218165,
+      "total_flips": 244,
+      "total_bounces": 1,
+      "bars_tested": 7850
+    }
+  },
+  "MSFT": {
+    "1min": {
+      "atr_length": 18,
+      "factor": 3.5,
+      "flip_accuracy": 0.7457792660806474,
+      "whipsaw_rate": 0.1096234309623431,
+      "avg_trend_duration": 35.32649644202595,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8829890076145139,
+      "total_flips": 2390,
+      "total_bounces": 1,
+      "bars_tested": 84428
+    },
+    "5min": {
+      "atr_length": 14,
+      "factor": 3.5,
+      "flip_accuracy": 0.7268436578171092,
+      "whipsaw_rate": 0.09469026548672567,
+      "avg_trend_duration": 36.36697653829128,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8743167637551563,
+      "total_flips": 2260,
+      "total_bounces": 1,
+      "bars_tested": 82226
+    },
+    "15min": {
+      "atr_length": 16,
+      "factor": 2.5,
+      "flip_accuracy": 0.7585810837004322,
+      "whipsaw_rate": 0.13552188552188552,
+      "avg_trend_duration": 25.581297388374054,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.7798609974002132,
+      "total_flips": 1188,
+      "total_bounces": 2,
+      "bars_tested": 30438
+    },
+    "1hr": {
+      "atr_length": 8,
+      "factor": 3.5,
+      "flip_accuracy": 0.7947154471544716,
+      "whipsaw_rate": 0.03048780487804878,
+      "avg_trend_duration": 47.61349693251534,
+      "bounce_win_rate": 0.6666666666666666,
+      "composite_score": 0.8613260012968228,
+      "total_flips": 164,
+      "total_bounces": 1,
+      "bars_tested": 7850
+    }
+  },
+  "AMZN": {
+    "1min": {
+      "atr_length": 12,
+      "factor": 3.0,
+      "flip_accuracy": 0.7257068538287542,
+      "whipsaw_rate": 0.1214757048590282,
+      "avg_trend_duration": 28.10981098109811,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8178270376231268,
+      "total_flips": 3334,
+      "total_bounces": 1,
+      "bars_tested": 93732
+    },
+    "5min": {
+      "atr_length": 8,
+      "factor": 3.5,
+      "flip_accuracy": 0.7519374032369558,
+      "whipsaw_rate": 0.06293382693197594,
+      "avg_trend_duration": 41.81759259259259,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8914531300850494,
+      "total_flips": 2161,
+      "total_bounces": 1,
+      "bars_tested": 90357
+    },
+    "15min": {
+      "atr_length": 14,
+      "factor": 3.0,
+      "flip_accuracy": 0.7674934799068959,
+      "whipsaw_rate": 0.09467455621301775,
+      "avg_trend_duration": 36.99526066350711,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8388957213465927,
+      "total_flips": 845,
+      "total_bounces": 1,
+      "bars_tested": 31250
+    },
+    "1hr": {
+      "atr_length": 8,
+      "factor": 2.2,
+      "flip_accuracy": 0.7927631578947368,
+      "whipsaw_rate": 0.10197368421052631,
+      "avg_trend_duration": 25.663366336633665,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.7917031501148631,
+      "total_flips": 304,
+      "total_bounces": 1,
+      "bars_tested": 7851
+    }
+  },
+  "AMD": {
+    "1min": {
+      "atr_length": 10,
+      "factor": 3.5,
+      "flip_accuracy": 0.7399610136452242,
+      "whipsaw_rate": 0.08187134502923976,
+      "avg_trend_duration": 38.95709828393136,
+      "bounce_win_rate": 0.0,
+      "composite_score": 0.7357884093141502,
+      "total_flips": 2565,
+      "total_bounces": 0,
+      "bars_tested": 100013
+    },
+    "5min": {
+      "atr_length": 8,
+      "factor": 3.5,
+      "flip_accuracy": 0.7536447978793904,
+      "whipsaw_rate": 0.06411530815109344,
+      "avg_trend_duration": 45.69269020387867,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8967956877693889,
+      "total_flips": 2012,
+      "total_bounces": 1,
+      "bars_tested": 91982
+    },
+    "15min": {
+      "atr_length": 18,
+      "factor": 2.8,
+      "flip_accuracy": 0.7742899850523169,
+      "whipsaw_rate": 0.09753363228699552,
+      "avg_trend_duration": 34.98540965207632,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.8332361235514948,
+      "total_flips": 892,
+      "total_bounces": 1,
+      "bars_tested": 31318
+    },
+    "1hr": {
+      "atr_length": 14,
+      "factor": 3.5,
+      "flip_accuracy": 0.766260162601626,
+      "whipsaw_rate": 0.018292682926829267,
+      "avg_trend_duration": 47.73006134969325,
+      "bounce_win_rate": 1.0,
+      "composite_score": 0.9044154321911319,
+      "total_flips": 164,
+      "total_bounces": 1,
+      "bars_tested": 7851
+    }
+  }
+}

@@ -1,0 +1,552 @@
+{
+  "SPY": {
+    "1min": {
+      "left_bars": 9,
+      "right_bars": 2,
+      "bounce_rate": 0.6881510416666666,
+      "interaction_rate": 0.8360808709175739,
+      "density_score": 0.0,
+      "composite_score": 0.5260846779419388,
+      "total_levels": 12860,
+      "total_bounces": 7399,
+      "total_breaks": 3353,
+      "bars_tested": 106329
+    },
+    "5min": {
+      "left_bars": 10,
+      "right_bars": 2,
+      "bounce_rate": 0.7336881319850984,
+      "interaction_rate": 0.8180235089246843,
+      "density_score": 0.0,
+      "composite_score": 0.5388823054714447,
+      "total_levels": 11485,
+      "total_bounces": 6893,
+      "total_breaks": 2502,
+      "bars_tested": 92732
+    },
+    "15min": {
+      "left_bars": 8,
+      "right_bars": 2,
+      "bounce_rate": 0.7491279849745103,
+      "interaction_rate": 0.831362926611644,
+      "density_score": 0.0,
+      "composite_score": 0.5490600719732973,
+      "total_levels": 4483,
+      "total_bounces": 2792,
+      "total_breaks": 935,
+      "bars_tested": 31386
+    },
+    "1hr": {
+      "left_bars": 7,
+      "right_bars": 2,
+      "bounce_rate": 0.7596606974552309,
+      "interaction_rate": 0.8434022257551669,
+      "density_score": 0.0,
+      "composite_score": 0.5568849467086425,
+      "total_levels": 1258,
+      "total_bounces": 806,
+      "total_breaks": 255,
+      "bars_tested": 7866
+    }
+  },
+  "QQQ": {
+    "1min": {
+      "left_bars": 10,
+      "right_bars": 2,
+      "bounce_rate": 0.689720511605874,
+      "interaction_rate": 0.8354440398923539,
+      "density_score": 0.0,
+      "composite_score": 0.5265214166100558,
+      "total_levels": 12634,
+      "total_bounces": 7280,
+      "total_breaks": 3275,
+      "bars_tested": 110527
+    },
+    "5min": {
+      "left_bars": 7,
+      "right_bars": 2,
+      "bounce_rate": 0.7317383789684344,
+      "interaction_rate": 0.8078929962519291,
+      "density_score": 0.0,
+      "composite_score": 0.5350632504629524,
+      "total_levels": 13607,
+      "total_bounces": 8044,
+      "total_breaks": 2949,
+      "bars_tested": 93614
+    },
+    "15min": {
+      "left_bars": 10,
+      "right_bars": 2,
+      "bounce_rate": 0.755397902529303,
+      "interaction_rate": 0.8195146612740142,
+      "density_score": 0.0,
+      "composite_score": 0.5480135593939255,
+      "total_levels": 3956,
+      "total_bounces": 2449,
+      "total_breaks": 793,
+      "bars_tested": 31380
+    },
+    "1hr": {
+      "left_bars": 10,
+      "right_bars": 2,
+      "bounce_rate": 0.7480577136514983,
+      "interaction_rate": 0.8460093896713615,
+      "density_score": 0.0,
+      "composite_score": 0.5530259023620078,
+      "total_levels": 1065,
+      "total_bounces": 674,
+      "total_breaks": 227,
+      "bars_tested": 7851
+    }
+  },
+  "TSLA": {
+    "1min": {
+      "left_bars": 5,
+      "right_bars": 2,
+      "bounce_rate": 0.7199641156579946,
+      "interaction_rate": 0.8230716801090537,
+      "density_score": 0.0,
+      "composite_score": 0.534907150295914,
+      "total_levels": 17606,
+      "total_bounces": 10433,
+      "total_breaks": 4058,
+      "bars_tested": 113856
+    },
+    "5min": {
+      "left_bars": 3,
+      "right_bars": 2,
+      "bounce_rate": 0.7600743160996861,
+      "interaction_rate": 0.7867042991784688,
+      "density_score": 0.0,
+      "composite_score": 0.540041016193415,
+      "total_levels": 19841,
+      "total_bounces": 11864,
+      "total_breaks": 3745,
+      "bars_tested": 94065
+    },
+    "15min": {
+      "left_bars": 8,
+      "right_bars": 2,
+      "bounce_rate": 0.7497837993658115,
+      "interaction_rate": 0.8004153207198893,
+      "density_score": 0.0,
+      "composite_score": 0.5400381159622913,
+      "total_levels": 4334,
+      "total_bounces": 2601,
+      "total_breaks": 868,
+      "bars_tested": 31386
+    },
+    "1hr": {
+      "left_bars": 5,
+      "right_bars": 2,
+      "bounce_rate": 0.7514450867052023,
+      "interaction_rate": 0.8249318801089919,
+      "density_score": 0.0,
+      "composite_score": 0.5480575987147784,
+      "total_levels": 1468,
+      "total_bounces": 910,
+      "total_breaks": 301,
+      "bars_tested": 7851
+    }
+  },
+  "NVDA": {
+    "1min": {
+      "left_bars": 8,
+      "right_bars": 2,
+      "bounce_rate": 0.723655523255814,
+      "interaction_rate": 0.8264884751107441,
+      "density_score": 0.0,
+      "composite_score": 0.5374087518355488,
+      "total_levels": 13319,
+      "total_bounces": 7966,
+      "total_breaks": 3042,
+      "bars_tested": 115882
+    },
+    "5min": {
+      "left_bars": 3,
+      "right_bars": 2,
+      "bounce_rate": 0.770577818587263,
+      "interaction_rate": 0.7894273583928756,
+      "density_score": 0.0,
+      "composite_score": 0.5450593349527679,
+      "total_levels": 19314,
+      "total_bounces": 11749,
+      "total_breaks": 3498,
+      "bars_tested": 93906
+    },
+    "15min": {
+      "left_bars": 8,
+      "right_bars": 2,
+      "bounce_rate": 0.7549476135040745,
+      "interaction_rate": 0.8044954343245142,
+      "density_score": 0.0,
+      "composite_score": 0.543327675698984,
+      "total_levels": 4271,
+      "total_bounces": 2594,
+      "total_breaks": 842,
+      "bars_tested": 31378
+    },
+    "1hr": {
+      "left_bars": 10,
+      "right_bars": 2,
+      "bounce_rate": 0.7320627802690582,
+      "interaction_rate": 0.8527724665391969,
+      "density_score": 0.0,
+      "composite_score": 0.5486568520693824,
+      "total_levels": 1046,
+      "total_bounces": 653,
+      "total_breaks": 239,
+      "bars_tested": 7851
+    }
+  },
+  "META": {
+    "1min": {
+      "left_bars": 10,
+      "right_bars": 2,
+      "bounce_rate": 0.6954973289239379,
+      "interaction_rate": 0.8329272168661934,
+      "density_score": 0.0,
+      "composite_score": 0.5280770966294331,
+      "total_levels": 9439,
+      "total_bounces": 5468,
+      "total_breaks": 2394,
+      "bars_tested": 83560
+    },
+    "5min": {
+      "left_bars": 7,
+      "right_bars": 2,
+      "bounce_rate": 0.7105348460291734,
+      "interaction_rate": 0.8123409110857545,
+      "density_score": 0.0,
+      "composite_score": 0.5279162117373957,
+      "total_levels": 11393,
+      "total_bounces": 6576,
+      "total_breaks": 2679,
+      "bars_tested": 80536
+    },
+    "15min": {
+      "left_bars": 7,
+      "right_bars": 2,
+      "bounce_rate": 0.7325905292479109,
+      "interaction_rate": 0.8069229040233761,
+      "density_score": 0.0,
+      "composite_score": 0.5351130829061772,
+      "total_levels": 4449,
+      "total_bounces": 2630,
+      "total_breaks": 960,
+      "bars_tested": 29938
+    },
+    "1hr": {
+      "left_bars": 5,
+      "right_bars": 2,
+      "bounce_rate": 0.7375215146299484,
+      "interaction_rate": 0.8142957252978276,
+      "density_score": 0.0,
+      "composite_score": 0.5392973234413276,
+      "total_levels": 1427,
+      "total_bounces": 857,
+      "total_breaks": 305,
+      "bars_tested": 7823
+    }
+  },
+  "NFLX": {
+    "1min": {
+      "left_bars": 8,
+      "right_bars": 2,
+      "bounce_rate": 0.7211587544665645,
+      "interaction_rate": 0.827455121436114,
+      "density_score": 0.0,
+      "composite_score": 0.53670003821746,
+      "total_levels": 9470,
+      "total_bounces": 5651,
+      "total_breaks": 2185,
+      "bars_tested": 84611
+    },
+    "5min": {
+      "left_bars": 8,
+      "right_bars": 2,
+      "bounce_rate": 0.6999090633525311,
+      "interaction_rate": 0.8259889834752128,
+      "density_score": 0.0,
+      "composite_score": 0.5277603203835762,
+      "total_levels": 7988,
+      "total_bounces": 4618,
+      "total_breaks": 1980,
+      "bars_tested": 60681
+    },
+    "15min": {
+      "left_bars": 6,
+      "right_bars": 2,
+      "bounce_rate": 0.7067057291666666,
+      "interaction_rate": 0.8131286394917946,
+      "density_score": 0.0,
+      "composite_score": 0.526620883514205,
+      "total_levels": 3778,
+      "total_bounces": 2171,
+      "total_breaks": 901,
+      "bars_tested": 23713
+    },
+    "1hr": {
+      "left_bars": 10,
+      "right_bars": 2,
+      "bounce_rate": 0.713903743315508,
+      "interaction_rate": 0.8095238095238095,
+      "density_score": 0.0,
+      "composite_score": 0.5284186401833461,
+      "total_levels": 924,
+      "total_bounces": 534,
+      "total_breaks": 214,
+      "bars_tested": 7033
+    }
+  },
+  "AAPL": {
+    "1min": {
+      "left_bars": 10,
+      "right_bars": 2,
+      "bounce_rate": 0.6910896066356667,
+      "interaction_rate": 0.8238765790018637,
+      "density_score": 0.0,
+      "composite_score": 0.5235988163548257,
+      "total_levels": 9658,
+      "total_bounces": 5499,
+      "total_breaks": 2458,
+      "bars_tested": 87876
+    },
+    "5min": {
+      "left_bars": 8,
+      "right_bars": 2,
+      "bounce_rate": 0.7314291804326974,
+      "interaction_rate": 0.8065153859377686,
+      "density_score": 0.0,
+      "composite_score": 0.5345262879544096,
+      "total_levels": 11634,
+      "total_bounces": 6863,
+      "total_breaks": 2520,
+      "bars_tested": 90747
+    },
+    "15min": {
+      "left_bars": 7,
+      "right_bars": 2,
+      "bounce_rate": 0.753711558854719,
+      "interaction_rate": 0.8145109047721875,
+      "density_score": 0.0,
+      "composite_score": 0.5458378949735438,
+      "total_levels": 4631,
+      "total_bounces": 2843,
+      "total_breaks": 929,
+      "bars_tested": 31280
+    },
+    "1hr": {
+      "left_bars": 5,
+      "right_bars": 2,
+      "bounce_rate": 0.787929589270746,
+      "interaction_rate": 0.8093622795115333,
+      "density_score": 0.0,
+      "composite_score": 0.5579805195617584,
+      "total_levels": 1474,
+      "total_bounces": 940,
+      "total_breaks": 253,
+      "bars_tested": 7851
+    }
+  },
+  "GOOGL": {
+    "1min": {
+      "left_bars": 10,
+      "right_bars": 2,
+      "bounce_rate": 0.6750693523097334,
+      "interaction_rate": 0.8341046277665995,
+      "density_score": 0.0,
+      "composite_score": 0.5202591292538732,
+      "total_levels": 9940,
+      "total_bounces": 5597,
+      "total_breaks": 2694,
+      "bars_tested": 88012
+    },
+    "5min": {
+      "left_bars": 8,
+      "right_bars": 2,
+      "bounce_rate": 0.7092059336823735,
+      "interaction_rate": 0.8060488834183225,
+      "density_score": 0.0,
+      "composite_score": 0.5254970384984461,
+      "total_levels": 11374,
+      "total_bounces": 6502,
+      "total_breaks": 2666,
+      "bars_tested": 87257
+    },
+    "15min": {
+      "left_bars": 8,
+      "right_bars": 2,
+      "bounce_rate": 0.7347525891829689,
+      "interaction_rate": 0.8132896583996256,
+      "density_score": 0.0,
+      "composite_score": 0.5378879331930753,
+      "total_levels": 4274,
+      "total_bounces": 2554,
+      "total_breaks": 922,
+      "bars_tested": 31004
+    },
+    "1hr": {
+      "left_bars": 6,
+      "right_bars": 2,
+      "bounce_rate": 0.7603383458646616,
+      "interaction_rate": 0.8122137404580153,
+      "density_score": 0.0,
+      "composite_score": 0.5477994604832692,
+      "total_levels": 1310,
+      "total_bounces": 809,
+      "total_breaks": 255,
+      "bars_tested": 7850
+    }
+  },
+  "MSFT": {
+    "1min": {
+      "left_bars": 10,
+      "right_bars": 2,
+      "bounce_rate": 0.6883314329152413,
+      "interaction_rate": 0.8338263257975914,
+      "density_score": 0.0,
+      "composite_score": 0.525480470905374,
+      "total_levels": 9466,
+      "total_bounces": 5433,
+      "total_breaks": 2460,
+      "bars_tested": 84428
+    },
+    "5min": {
+      "left_bars": 9,
+      "right_bars": 2,
+      "bounce_rate": 0.7034198113207547,
+      "interaction_rate": 0.8141321044546851,
+      "density_score": 0.0,
+      "composite_score": 0.5256075558647074,
+      "total_levels": 10416,
+      "total_bounces": 5965,
+      "total_breaks": 2515,
+      "bars_tested": 82226
+    },
+    "15min": {
+      "left_bars": 10,
+      "right_bars": 2,
+      "bounce_rate": 0.7460417986067132,
+      "interaction_rate": 0.8232533889468197,
+      "density_score": 0.0,
+      "composite_score": 0.5453927361267312,
+      "total_levels": 3836,
+      "total_bounces": 2356,
+      "total_breaks": 802,
+      "bars_tested": 30438
+    },
+    "1hr": {
+      "left_bars": 10,
+      "right_bars": 2,
+      "bounce_rate": 0.7703788748564868,
+      "interaction_rate": 0.8287345385347288,
+      "density_score": 0.0,
+      "composite_score": 0.5567719115030134,
+      "total_levels": 1051,
+      "total_bounces": 671,
+      "total_breaks": 200,
+      "bars_tested": 7850
+    }
+  },
+  "AMZN": {
+    "1min": {
+      "left_bars": 7,
+      "right_bars": 2,
+      "bounce_rate": 0.6932730923694779,
+      "interaction_rate": 0.8258706467661692,
+      "density_score": 0.0,
+      "composite_score": 0.5250704309776419,
+      "total_levels": 12060,
+      "total_bounces": 6905,
+      "total_breaks": 3055,
+      "bars_tested": 93732
+    },
+    "5min": {
+      "left_bars": 8,
+      "right_bars": 2,
+      "bounce_rate": 0.7280135464070272,
+      "interaction_rate": 0.8128172043010753,
+      "density_score": 0.0,
+      "composite_score": 0.5350505798531335,
+      "total_levels": 11625,
+      "total_bounces": 6879,
+      "total_breaks": 2570,
+      "bars_tested": 90357
+    },
+    "15min": {
+      "left_bars": 6,
+      "right_bars": 2,
+      "bounce_rate": 0.7589846695149535,
+      "interaction_rate": 0.8112130479102956,
+      "density_score": 0.0,
+      "composite_score": 0.5469577821790701,
+      "total_levels": 4905,
+      "total_bounces": 3020,
+      "total_breaks": 959,
+      "bars_tested": 31250
+    },
+    "1hr": {
+      "left_bars": 10,
+      "right_bars": 2,
+      "bounce_rate": 0.7471526195899773,
+      "interaction_rate": 0.8401913875598086,
+      "density_score": 0.0,
+      "composite_score": 0.5509184641039335,
+      "total_levels": 1045,
+      "total_bounces": 656,
+      "total_breaks": 222,
+      "bars_tested": 7851
+    }
+  },
+  "AMD": {
+    "1min": {
+      "left_bars": 10,
+      "right_bars": 2,
+      "bounce_rate": 0.7001559367342393,
+      "interaction_rate": 0.8281523844663776,
+      "density_score": 0.0,
+      "composite_score": 0.528508090033609,
+      "total_levels": 10841,
+      "total_bounces": 6286,
+      "total_breaks": 2692,
+      "bars_tested": 100013
+    },
+    "5min": {
+      "left_bars": 5,
+      "right_bars": 2,
+      "bounce_rate": 0.7332264326103468,
+      "interaction_rate": 0.8001755807671529,
+      "density_score": 0.0,
+      "composite_score": 0.5333432472742846,
+      "total_levels": 14808,
+      "total_bounces": 8688,
+      "total_breaks": 3161,
+      "bars_tested": 91982
+    },
+    "15min": {
+      "left_bars": 6,
+      "right_bars": 2,
+      "bounce_rate": 0.7445236882322975,
+      "interaction_rate": 0.8061601642710472,
+      "density_score": 0.0,
+      "composite_score": 0.5396575245742332,
+      "total_levels": 4870,
+      "total_bounces": 2923,
+      "total_breaks": 1003,
+      "bars_tested": 31318
+    },
+    "1hr": {
+      "left_bars": 7,
+      "right_bars": 2,
+      "bounce_rate": 0.7574879227053141,
+      "interaction_rate": 0.8380566801619433,
+      "density_score": 0.0,
+      "composite_score": 0.5544121731307086,
+      "total_levels": 1235,
+      "total_bounces": 784,
+      "total_breaks": 251,
+      "bars_tested": 7851
+    }
+  }
+}

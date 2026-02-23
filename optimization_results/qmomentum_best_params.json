@@ -1,0 +1,552 @@
+{
+  "SPY": {
+    "1min": {
+      "rsi_length": 16,
+      "stoch_length": 10,
+      "cross_accuracy": 0.784140612344079,
+      "whipsaw_rate": 0.6381014093633566,
+      "avg_trend_duration": 8.608100445524505,
+      "zone_exit_accuracy": 0.8115458015267175,
+      "composite_score": 0.4870605183180077,
+      "total_crosses": 12346,
+      "total_zone_exits": 2096,
+      "bars_tested": 106329
+    },
+    "5min": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7919365602795118,
+      "whipsaw_rate": 0.6137086326698857,
+      "avg_trend_duration": 10.917196702002355,
+      "zone_exit_accuracy": 0.8131510416666666,
+      "composite_score": 0.4963119365423256,
+      "total_crosses": 8491,
+      "total_zone_exits": 1536,
+      "bars_tested": 92732
+    },
+    "15min": {
+      "rsi_length": 16,
+      "stoch_length": 10,
+      "cross_accuracy": 0.8047487209616299,
+      "whipsaw_rate": 0.5918297288019224,
+      "avg_trend_duration": 10.768543956043956,
+      "zone_exit_accuracy": 0.8124267291910903,
+      "composite_score": 0.5072841306866205,
+      "total_crosses": 2913,
+      "total_zone_exits": 853,
+      "bars_tested": 31386
+    },
+    "1hr": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7885923600209314,
+      "whipsaw_rate": 0.5604395604395604,
+      "avg_trend_duration": 12.30503144654088,
+      "zone_exit_accuracy": 0.8527131782945736,
+      "composite_score": 0.5216260700574247,
+      "total_crosses": 637,
+      "total_zone_exits": 129,
+      "bars_tested": 7866
+    }
+  },
+  "QQQ": {
+    "1min": {
+      "rsi_length": 18,
+      "stoch_length": 12,
+      "cross_accuracy": 0.7858361774744026,
+      "whipsaw_rate": 0.6226109215017065,
+      "avg_trend_duration": 9.4259749125352,
+      "zone_exit_accuracy": 0.808473592571097,
+      "composite_score": 0.49108738113739986,
+      "total_crosses": 11720,
+      "total_zone_exits": 1723,
+      "bars_tested": 110527
+    },
+    "5min": {
+      "rsi_length": 14,
+      "stoch_length": 14,
+      "cross_accuracy": 0.7959291046003091,
+      "whipsaw_rate": 0.6134951168984907,
+      "avg_trend_duration": 9.231945540647198,
+      "zone_exit_accuracy": 0.806949806949807,
+      "composite_score": 0.49673696415982604,
+      "total_crosses": 10137,
+      "total_zone_exits": 2849,
+      "bars_tested": 93614
+    },
+    "15min": {
+      "rsi_length": 14,
+      "stoch_length": 14,
+      "cross_accuracy": 0.8003620481486234,
+      "whipsaw_rate": 0.6061179438662883,
+      "avg_trend_duration": 9.890851735015772,
+      "zone_exit_accuracy": 0.8123222748815165,
+      "composite_score": 0.5020215523176442,
+      "total_crosses": 3171,
+      "total_zone_exits": 1055,
+      "bars_tested": 31380
+    },
+    "1hr": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.8107064017660045,
+      "whipsaw_rate": 0.5463576158940397,
+      "avg_trend_duration": 12.953565505804312,
+      "zone_exit_accuracy": 0.8680555555555556,
+      "composite_score": 0.5356157977360477,
+      "total_crosses": 604,
+      "total_zone_exits": 144,
+      "bars_tested": 7851
+    }
+  },
+  "TSLA": {
+    "1min": {
+      "rsi_length": 16,
+      "stoch_length": 10,
+      "cross_accuracy": 0.7838801903507789,
+      "whipsaw_rate": 0.6389548693586699,
+      "avg_trend_duration": 8.722835249042145,
+      "zone_exit_accuracy": 0.816308636562911,
+      "composite_score": 0.4874487091316966,
+      "total_crosses": 13051,
+      "total_zone_exits": 2281,
+      "bars_tested": 113856
+    },
+    "5min": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7853864284828186,
+      "whipsaw_rate": 0.6000496216350328,
+      "avg_trend_duration": 11.665136476426799,
+      "zone_exit_accuracy": 0.8205128205128205,
+      "composite_score": 0.4985698248569689,
+      "total_crosses": 8061,
+      "total_zone_exits": 1716,
+      "bars_tested": 94065
+    },
+    "15min": {
+      "rsi_length": 16,
+      "stoch_length": 10,
+      "cross_accuracy": 0.7850260879485779,
+      "whipsaw_rate": 0.5741609527246482,
+      "avg_trend_duration": 11.322021660649819,
+      "zone_exit_accuracy": 0.826797385620915,
+      "composite_score": 0.5070421743209688,
+      "total_crosses": 2771,
+      "total_zone_exits": 918,
+      "bars_tested": 31386
+    },
+    "1hr": {
+      "rsi_length": 18,
+      "stoch_length": 12,
+      "cross_accuracy": 0.7740384615384616,
+      "whipsaw_rate": 0.5296,
+      "avg_trend_duration": 12.551282051282051,
+      "zone_exit_accuracy": 0.7884615384615384,
+      "composite_score": 0.5147761212029172,
+      "total_crosses": 625,
+      "total_zone_exits": 208,
+      "bars_tested": 7851
+    }
+  },
+  "NVDA": {
+    "1min": {
+      "rsi_length": 16,
+      "stoch_length": 10,
+      "cross_accuracy": 0.7709927064419325,
+      "whipsaw_rate": 0.6333606740735217,
+      "avg_trend_duration": 8.639970171513795,
+      "zone_exit_accuracy": 0.8019323671497585,
+      "composite_score": 0.4821699255353227,
+      "total_crosses": 13411,
+      "total_zone_exits": 2277,
+      "bars_tested": 115882
+    },
+    "5min": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7775311862867427,
+      "whipsaw_rate": 0.594169835234474,
+      "avg_trend_duration": 11.900747876790467,
+      "zone_exit_accuracy": 0.8167539267015707,
+      "composite_score": 0.49674019755321785,
+      "total_crosses": 7890,
+      "total_zone_exits": 1719,
+      "bars_tested": 93906
+    },
+    "15min": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7876569837214035,
+      "whipsaw_rate": 0.588715953307393,
+      "avg_trend_duration": 12.200467107824055,
+      "zone_exit_accuracy": 0.8123209169054442,
+      "composite_score": 0.5022932051673688,
+      "total_crosses": 2570,
+      "total_zone_exits": 698,
+      "bars_tested": 31378
+    },
+    "1hr": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7817786324786326,
+      "whipsaw_rate": 0.5632,
+      "avg_trend_duration": 12.525641025641026,
+      "zone_exit_accuracy": 0.8503401360544217,
+      "composite_score": 0.518350640887671,
+      "total_crosses": 625,
+      "total_zone_exits": 147,
+      "bars_tested": 7851
+    }
+  },
+  "META": {
+    "1min": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7710565234642716,
+      "whipsaw_rate": 0.6502543014825235,
+      "avg_trend_duration": 9.035064935064936,
+      "zone_exit_accuracy": 0.8055260361317748,
+      "composite_score": 0.4786757466349588,
+      "total_crosses": 9241,
+      "total_zone_exits": 941,
+      "bars_tested": 83560
+    },
+    "5min": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7745349035671616,
+      "whipsaw_rate": 0.6290322580645161,
+      "avg_trend_duration": 10.304826526693125,
+      "zone_exit_accuracy": 0.8081841432225064,
+      "composite_score": 0.48569653844662497,
+      "total_crosses": 7812,
+      "total_zone_exits": 1173,
+      "bars_tested": 80536
+    },
+    "15min": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7837219350474598,
+      "whipsaw_rate": 0.5939204988308652,
+      "avg_trend_duration": 11.660818713450292,
+      "zone_exit_accuracy": 0.8145454545454546,
+      "composite_score": 0.49995186534847724,
+      "total_crosses": 2566,
+      "total_zone_exits": 550,
+      "bars_tested": 29938
+    },
+    "1hr": {
+      "rsi_length": 18,
+      "stoch_length": 12,
+      "cross_accuracy": 0.774987690792713,
+      "whipsaw_rate": 0.5701624815361891,
+      "avg_trend_duration": 11.516272189349113,
+      "zone_exit_accuracy": 0.8783068783068783,
+      "composite_score": 0.5178116247995063,
+      "total_crosses": 677,
+      "total_zone_exits": 189,
+      "bars_tested": 7823
+    }
+  },
+  "NFLX": {
+    "1min": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7520304174008672,
+      "whipsaw_rate": 0.6626167285872075,
+      "avg_trend_duration": 8.494275959027917,
+      "zone_exit_accuracy": 0.8292682926829268,
+      "composite_score": 0.47244866834510907,
+      "total_crosses": 9959,
+      "total_zone_exits": 861,
+      "bars_tested": 84611
+    },
+    "5min": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7766801619433199,
+      "whipsaw_rate": 0.6302834008097166,
+      "avg_trend_duration": 9.821185617103984,
+      "zone_exit_accuracy": 0.7904642409033877,
+      "composite_score": 0.48364608979251483,
+      "total_crosses": 6175,
+      "total_zone_exits": 797,
+      "bars_tested": 60681
+    },
+    "15min": {
+      "rsi_length": 14,
+      "stoch_length": 14,
+      "cross_accuracy": 0.7756209548244425,
+      "whipsaw_rate": 0.6290855673889093,
+      "avg_trend_duration": 8.703159441587069,
+      "zone_exit_accuracy": 0.840877914951989,
+      "composite_score": 0.4921627325743817,
+      "total_crosses": 2723,
+      "total_zone_exits": 729,
+      "bars_tested": 23713
+    },
+    "1hr": {
+      "rsi_length": 18,
+      "stoch_length": 12,
+      "cross_accuracy": 0.7771144278606966,
+      "whipsaw_rate": 0.5985074626865672,
+      "avg_trend_duration": 10.431988041853513,
+      "zone_exit_accuracy": 0.7848101265822784,
+      "composite_score": 0.4975011598008081,
+      "total_crosses": 670,
+      "total_zone_exits": 159,
+      "bars_tested": 7033
+    }
+  },
+  "AAPL": {
+    "1min": {
+      "rsi_length": 18,
+      "stoch_length": 12,
+      "cross_accuracy": 0.762673665144257,
+      "whipsaw_rate": 0.6613776024947262,
+      "avg_trend_duration": 8.058613098514034,
+      "zone_exit_accuracy": 0.8245770258236865,
+      "composite_score": 0.475736457893556,
+      "total_crosses": 10903,
+      "total_zone_exits": 1123,
+      "bars_tested": 87876
+    },
+    "5min": {
+      "rsi_length": 18,
+      "stoch_length": 12,
+      "cross_accuracy": 0.7716483209300219,
+      "whipsaw_rate": 0.6391742092952304,
+      "avg_trend_duration": 9.22772579332791,
+      "zone_exit_accuracy": 0.819300518134715,
+      "composite_score": 0.4836868691738191,
+      "total_crosses": 9833,
+      "total_zone_exits": 1544,
+      "bars_tested": 90747
+    },
+    "15min": {
+      "rsi_length": 18,
+      "stoch_length": 12,
+      "cross_accuracy": 0.7732280008087994,
+      "whipsaw_rate": 0.6071197411003236,
+      "avg_trend_duration": 10.115571382324378,
+      "zone_exit_accuracy": 0.7971246006389776,
+      "composite_score": 0.49003549426342424,
+      "total_crosses": 3090,
+      "total_zone_exits": 626,
+      "bars_tested": 31280
+    },
+    "1hr": {
+      "rsi_length": 18,
+      "stoch_length": 12,
+      "cross_accuracy": 0.7782426778242678,
+      "whipsaw_rate": 0.5760111576011158,
+      "avg_trend_duration": 10.905027932960893,
+      "zone_exit_accuracy": 0.7989690721649485,
+      "composite_score": 0.5051725016147854,
+      "total_crosses": 717,
+      "total_zone_exits": 195,
+      "bars_tested": 7851
+    }
+  },
+  "GOOGL": {
+    "1min": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7675808344893822,
+      "whipsaw_rate": 0.6459355664604225,
+      "avg_trend_duration": 9.387602688573562,
+      "zone_exit_accuracy": 0.8167092924126172,
+      "composite_score": 0.48020910810985895,
+      "total_crosses": 9374,
+      "total_zone_exits": 1173,
+      "bars_tested": 88012
+    },
+    "5min": {
+      "rsi_length": 18,
+      "stoch_length": 12,
+      "cross_accuracy": 0.7727042484686222,
+      "whipsaw_rate": 0.6422038093188421,
+      "avg_trend_duration": 9.38850624192854,
+      "zone_exit_accuracy": 0.8090322580645162,
+      "composite_score": 0.48178835346259563,
+      "total_crosses": 9293,
+      "total_zone_exits": 1550,
+      "bars_tested": 87257
+    },
+    "15min": {
+      "rsi_length": 18,
+      "stoch_length": 12,
+      "cross_accuracy": 0.7748173130972456,
+      "whipsaw_rate": 0.6097807757166948,
+      "avg_trend_duration": 10.448717948717949,
+      "zone_exit_accuracy": 0.8123028391167192,
+      "composite_score": 0.4922713511838199,
+      "total_crosses": 2965,
+      "total_zone_exits": 634,
+      "bars_tested": 31004
+    },
+    "1hr": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7978319783197833,
+      "whipsaw_rate": 0.5414634146341464,
+      "avg_trend_duration": 12.646579804560261,
+      "zone_exit_accuracy": 0.7986111111111112,
+      "composite_score": 0.5217221517923856,
+      "total_crosses": 615,
+      "total_zone_exits": 144,
+      "bars_tested": 7850
+    }
+  },
+  "MSFT": {
+    "1min": {
+      "rsi_length": 12,
+      "stoch_length": 12,
+      "cross_accuracy": 0.7657296620279382,
+      "whipsaw_rate": 0.6717457196690424,
+      "avg_trend_duration": 6.915861051941668,
+      "zone_exit_accuracy": 0.8277673545966229,
+      "composite_score": 0.4746436265134902,
+      "total_crosses": 12207,
+      "total_zone_exits": 2665,
+      "bars_tested": 84428
+    },
+    "5min": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7736803165048206,
+      "whipsaw_rate": 0.6476719157131529,
+      "avg_trend_duration": 9.31248583729889,
+      "zone_exit_accuracy": 0.8192534381139489,
+      "composite_score": 0.48232442136193643,
+      "total_crosses": 8827,
+      "total_zone_exits": 1018,
+      "bars_tested": 82226
+    },
+    "15min": {
+      "rsi_length": 18,
+      "stoch_length": 12,
+      "cross_accuracy": 0.7874299275972619,
+      "whipsaw_rate": 0.6316776007497656,
+      "avg_trend_duration": 9.5046875,
+      "zone_exit_accuracy": 0.8151750972762646,
+      "composite_score": 0.49151865838428316,
+      "total_crosses": 3201,
+      "total_zone_exits": 514,
+      "bars_tested": 30438
+    },
+    "1hr": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7843766720171215,
+      "whipsaw_rate": 0.5698234349919743,
+      "avg_trend_duration": 12.530546623794212,
+      "zone_exit_accuracy": 0.8263888888888888,
+      "composite_score": 0.5140155496790992,
+      "total_crosses": 623,
+      "total_zone_exits": 144,
+      "bars_tested": 7850
+    }
+  },
+  "AMZN": {
+    "1min": {
+      "rsi_length": 16,
+      "stoch_length": 10,
+      "cross_accuracy": 0.755453217603797,
+      "whipsaw_rate": 0.6786459168939516,
+      "avg_trend_duration": 7.518251103088648,
+      "zone_exit_accuracy": 0.8288804071246819,
+      "composite_score": 0.46948025840038365,
+      "total_crosses": 12466,
+      "total_zone_exits": 1572,
+      "bars_tested": 93732
+    },
+    "5min": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7758992397594463,
+      "whipsaw_rate": 0.6370135027799841,
+      "avg_trend_duration": 10.24875170222424,
+      "zone_exit_accuracy": 0.8131868131868132,
+      "composite_score": 0.48485650569559635,
+      "total_crosses": 8813,
+      "total_zone_exits": 1365,
+      "bars_tested": 90357
+    },
+    "15min": {
+      "rsi_length": 18,
+      "stoch_length": 12,
+      "cross_accuracy": 0.7769327987209037,
+      "whipsaw_rate": 0.605217988328184,
+      "avg_trend_duration": 10.722184065934066,
+      "zone_exit_accuracy": 0.8274809160305343,
+      "composite_score": 0.4964596693254,
+      "total_crosses": 2913,
+      "total_zone_exits": 655,
+      "bars_tested": 31250
+    },
+    "1hr": {
+      "rsi_length": 16,
+      "stoch_length": 10,
+      "cross_accuracy": 0.7766521948866377,
+      "whipsaw_rate": 0.5687409551374819,
+      "avg_trend_duration": 11.302898550724638,
+      "zone_exit_accuracy": 0.8648648648648649,
+      "composite_score": 0.5165711406043672,
+      "total_crosses": 691,
+      "total_zone_exits": 222,
+      "bars_tested": 7851
+    }
+  },
+  "AMD": {
+    "1min": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7657280342184993,
+      "whipsaw_rate": 0.6640527535198717,
+      "avg_trend_duration": 8.906960163978255,
+      "zone_exit_accuracy": 0.8167495854063018,
+      "composite_score": 0.4749493515279354,
+      "total_crosses": 11222,
+      "total_zone_exits": 1206,
+      "bars_tested": 100013
+    },
+    "5min": {
+      "rsi_length": 16,
+      "stoch_length": 10,
+      "cross_accuracy": 0.772130538962573,
+      "whipsaw_rate": 0.6412878404373797,
+      "avg_trend_duration": 9.310247063588497,
+      "zone_exit_accuracy": 0.8015198927134555,
+      "composite_score": 0.4806578031405593,
+      "total_crosses": 9877,
+      "total_zone_exits": 2237,
+      "bars_tested": 91982
+    },
+    "15min": {
+      "rsi_length": 20,
+      "stoch_length": 18,
+      "cross_accuracy": 0.7836334133393411,
+      "whipsaw_rate": 0.592797783933518,
+      "avg_trend_duration": 12.387965162311955,
+      "zone_exit_accuracy": 0.8024132730015083,
+      "composite_score": 0.4984120104323324,
+      "total_crosses": 2527,
+      "total_zone_exits": 663,
+      "bars_tested": 31318
+    },
+    "1hr": {
+      "rsi_length": 18,
+      "stoch_length": 12,
+      "cross_accuracy": 0.7811704834605598,
+      "whipsaw_rate": 0.5709923664122137,
+      "avg_trend_duration": 11.946483180428135,
+      "zone_exit_accuracy": 0.8394495412844036,
+      "composite_score": 0.5141872645519354,
+      "total_crosses": 655,
+      "total_zone_exits": 218,
+      "bars_tested": 7851
+    }
+  }
+}

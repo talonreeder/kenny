@@ -1,0 +1,389 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © YELENA AI Trading Platform
+
+//@version=6
+indicator("YELENA v2: QSMC - Smart Money Concepts", shorttitle="QSMC", overlay=true, max_lines_count=500, max_boxes_count=500, max_labels_count=500)
+
+// ============================================================================
+// QSMC v2 — SMART MONEY CONCEPTS
+// ============================================================================
+// Detects institutional structure: Break of Structure (BOS), Change of Character
+// (CHoCH), Order Blocks (OB), and Fair Value Gaps (FVG).
+//
+// BOS = trend continuation confirmed (swing broken in trend direction)
+// CHoCH = potential reversal (swing broken against trend)
+// OB = last opposing candle before impulsive move (institutional demand/supply)
+// FVG = three-candle imbalance gap (price often returns to fill)
+//
+// v2 ENHANCEMENTS:
+//   1. Auto-optimized swing detection per symbol/timeframe
+//   2. Order block strength filtering (ATR-based)
+//   3. OB mitigation tracking (disappear when price returns)
+//   4. FVG detection and fill tracking
+//   5. Structure state tracking (uptrend/downtrend)
+//   6. Info table with real-time metrics
+//   7. Hidden plot exports for Master Confluence
+//   8. Enhanced webhook payload
+// ============================================================================
+
+// ==================== AUTO-OPTIMIZATION ENGINE ====================
+tf_seconds = timeframe.in_seconds(timeframe.period)
+string tf_group = tf_seconds <= 60 ? "scalp" : tf_seconds <= 900 ? "intraday" : "swing"
+
+string settings_mode = input.string("Auto", "Settings Mode", options=["Auto", "Manual"], group="⚙️ Settings Mode")
+
+int manual_swing_length = input.int(5, "Swing Length", minval=2, maxval=15, group="🔧 Manual Settings")
+float manual_ob_strength = input.float(1.5, "OB Strength (ATR mult)", minval=0.5, maxval=5.0, step=0.1, group="🔧 Manual Settings")
+
+bool show_bos = input.bool(true, "Show BOS", group="🎨 Visuals")
+bool show_choch = input.bool(true, "Show CHoCH", group="🎨 Visuals")
+bool show_ob = input.bool(true, "Show Order Blocks", group="🎨 Visuals")
+bool show_fvg = input.bool(true, "Show Fair Value Gaps", group="🎨 Visuals")
+string table_position = input.string("Top Right", "Info Table Position", options=["Top Right", "Top Left", "Bottom Right", "Bottom Left"], group="🎨 Visuals")
+
+int max_ob_age = input.int(50, "Max OB Age (bars)", minval=10, maxval=200, group="📐 Structure")
+int max_fvg_age = input.int(30, "Max FVG Age (bars)", minval=5, maxval=100, group="📐 Structure")
+
+string passphrase = input.string("", "Webhook Passphrase", group="🔔 Alerts")
+
+// ==================== AUTO-OPTIMIZATION LOOKUP TABLES ====================
+// Placeholder values — replaced after: python -m scripts.optimize_params --indicator qsmc
+
+f_auto_swing_length() =>
+    string t = syminfo.ticker
+    if t == "SPY"
+        tf_group == "scalp" ? 6 : tf_group == "intraday" ? 10 : 10
+    else if t == "QQQ"
+        tf_group == "scalp" ? 8 : tf_group == "intraday" ? 9 : 10
+    else if t == "TSLA"
+        tf_group == "scalp" ? 6 : tf_group == "intraday" ? 8 : 10
+    else if t == "NVDA"
+        tf_group == "scalp" ? 9 : tf_group == "intraday" ? 10 : 10
+    else if t == "META"
+        tf_group == "scalp" ? 7 : tf_group == "intraday" ? 8 : 10
+    else if t == "NFLX"
+        tf_group == "scalp" ? 5 : tf_group == "intraday" ? 10 : 6
+    else if t == "AAPL"
+        tf_group == "scalp" ? 8 : tf_group == "intraday" ? 10 : 10
+    else if t == "GOOGL"
+        tf_group == "scalp" ? 7 : tf_group == "intraday" ? 9 : 9
+    else if t == "MSFT"
+        tf_group == "scalp" ? 7 : tf_group == "intraday" ? 7 : 10
+    else if t == "AMZN"
+        tf_group == "scalp" ? 7 : tf_group == "intraday" ? 10 : 10
+    else if t == "AMD"
+        tf_group == "scalp" ? 10 : tf_group == "intraday" ? 10 : 9
+    else
+        tf_group == "scalp" ? 4 : tf_group == "intraday" ? 5 : 6
+
+f_auto_ob_strength() =>
+    string t = syminfo.ticker
+    if t == "SPY"
+        tf_group == "scalp" ? 1.5 : tf_group == "intraday" ? 1.0 : 1.0
+    else if t == "QQQ"
+        tf_group == "scalp" ? 3.0 : tf_group == "intraday" ? 3.0 : 1.0
+    else if t == "TSLA"
+        tf_group == "scalp" ? 1.5 : tf_group == "intraday" ? 3.0 : 1.0
+    else if t == "NVDA"
+        tf_group == "scalp" ? 3.0 : tf_group == "intraday" ? 1.0 : 1.0
+    else if t == "META"
+        tf_group == "scalp" ? 2.5 : tf_group == "intraday" ? 3.0 : 1.0
+    else if t == "NFLX"
+        tf_group == "scalp" ? 2.0 : tf_group == "intraday" ? 1.0 : 1.5
+    else if t == "AAPL"
+        tf_group == "scalp" ? 3.0 : tf_group == "intraday" ? 1.0 : 1.0
+    else if t == "GOOGL"
+        tf_group == "scalp" ? 2.5 : tf_group == "intraday" ? 3.0 : 3.0
+    else if t == "MSFT"
+        tf_group == "scalp" ? 2.5 : tf_group == "intraday" ? 2.5 : 1.0
+    else if t == "AMZN"
+        tf_group == "scalp" ? 2.5 : tf_group == "intraday" ? 1.0 : 1.0
+    else if t == "AMD"
+        tf_group == "scalp" ? 1.0 : tf_group == "intraday" ? 1.0 : 3.0
+    else
+        tf_group == "scalp" ? 1.5 : tf_group == "intraday" ? 1.5 : 2.0
+
+int swing_length = settings_mode == "Auto" ? f_auto_swing_length() : manual_swing_length
+float ob_strength = settings_mode == "Auto" ? f_auto_ob_strength() : manual_ob_strength
+
+// Fixed
+int atr_length = 14
+
+// ==================== CORE CALCULATIONS ====================
+
+float atr_val = ta.atr(atr_length)
+
+// --- Swing detection ---
+float swing_high_val = ta.pivothigh(high, swing_length, swing_length)
+float swing_low_val = ta.pivotlow(low, swing_length, swing_length)
+
+// Track swing highs and lows
+var float last_swing_high = na
+var float last_swing_low = na
+var int last_sh_bar = na
+var int last_sl_bar = na
+var float prev_swing_high = na
+var float prev_swing_low = na
+
+if not na(swing_high_val)
+    prev_swing_high := last_swing_high
+    last_swing_high := swing_high_val
+    last_sh_bar := bar_index - swing_length
+
+if not na(swing_low_val)
+    prev_swing_low := last_swing_low
+    last_swing_low := swing_low_val
+    last_sl_bar := bar_index - swing_length
+
+// ==================== STRUCTURE STATE ====================
+// 1 = uptrend, -1 = downtrend
+var int structure = 0
+
+// BOS and CHoCH detection
+bool bullish_bos = false
+bool bearish_bos = false
+bool bullish_choch = false
+bool bearish_choch = false
+
+// Break of swing high
+if not na(last_swing_high) and high > last_swing_high and high[1] <= last_swing_high
+    if structure >= 0
+        bullish_bos := true   // Continuation
+    else
+        bullish_choch := true // Reversal
+    structure := 1
+
+// Break of swing low
+if not na(last_swing_low) and low < last_swing_low and low[1] >= last_swing_low
+    if structure <= 0
+        bearish_bos := true   // Continuation
+    else
+        bearish_choch := true // Reversal
+    structure := -1
+
+// Combined signals for exports
+float bos_signal = bullish_bos ? 1 : bearish_bos ? -1 : 0
+float choch_signal = bullish_choch ? 1 : bearish_choch ? -1 : 0
+string structure_name = structure > 0 ? "UPTREND" : structure < 0 ? "DOWNTREND" : "RANGING"
+
+// Track last signal
+var string last_signal_text = "NONE"
+if bullish_bos
+    last_signal_text := "BOS ▲"
+if bearish_bos
+    last_signal_text := "BOS ▼"
+if bullish_choch
+    last_signal_text := "CHoCH ▲"
+if bearish_choch
+    last_signal_text := "CHoCH ▼"
+
+// ==================== ORDER BLOCKS ====================
+// Simple OB: track last bearish candle before bullish impulse (and vice versa)
+
+// Use arrays to store active order blocks
+var array<float> ob_top = array.new_float()
+var array<float> ob_bottom = array.new_float()
+var array<int> ob_bar = array.new_int()
+var array<int> ob_dir = array.new_int()  // 1=bullish OB, -1=bearish OB
+var array<box> ob_boxes = array.new_box()
+
+// Detect bullish order block: bearish candle followed by strong bullish move
+bool is_bearish_candle = close[1] < open[1]
+bool strong_bull_move = close > open and (close - open) > ob_strength * atr_val
+bool new_bull_ob = is_bearish_candle and strong_bull_move
+
+// Detect bearish order block: bullish candle followed by strong bearish move
+bool is_bullish_candle = close[1] > open[1]
+bool strong_bear_move = close < open and (open - close) > ob_strength * atr_val
+bool new_bear_ob = is_bullish_candle and strong_bear_move
+
+if new_bull_ob and show_ob
+    float ob_t = math.max(open[1], close[1])
+    float ob_b = math.min(open[1], close[1])
+    array.push(ob_top, ob_t)
+    array.push(ob_bottom, ob_b)
+    array.push(ob_bar, bar_index - 1)
+    array.push(ob_dir, 1)
+    box ob_box = box.new(bar_index - 1, ob_t, bar_index + 20, ob_b, border_color=color.new(#4CAF50, 60), bgcolor=color.new(#4CAF50, 85))
+    array.push(ob_boxes, ob_box)
+
+if new_bear_ob and show_ob
+    float ob_t = math.max(open[1], close[1])
+    float ob_b = math.min(open[1], close[1])
+    array.push(ob_top, ob_t)
+    array.push(ob_bottom, ob_b)
+    array.push(ob_bar, bar_index - 1)
+    array.push(ob_dir, -1)
+    box ob_box = box.new(bar_index - 1, ob_t, bar_index + 20, ob_b, border_color=color.new(#F44336, 60), bgcolor=color.new(#F44336, 85))
+    array.push(ob_boxes, ob_box)
+
+// Track price entering OB zone
+bool price_in_bull_ob = false
+bool price_in_bear_ob = false
+
+// Mitigate / extend / detect entry for OBs
+if array.size(ob_top) > 0
+    int sz = array.size(ob_top)
+    for i = sz - 1 to 0
+        float t = array.get(ob_top, i)
+        float b = array.get(ob_bottom, i)
+        int age = bar_index - array.get(ob_bar, i)
+        int d = array.get(ob_dir, i)
+
+        bool mitigated = (d == 1 and close < b) or (d == -1 and close > t)
+        bool too_old = age > max_ob_age
+
+        if mitigated or too_old
+            box.delete(array.get(ob_boxes, i))
+            array.remove(ob_top, i)
+            array.remove(ob_bottom, i)
+            array.remove(ob_bar, i)
+            array.remove(ob_dir, i)
+            array.remove(ob_boxes, i)
+        else
+            // Extend box to current bar
+            box.set_right(array.get(ob_boxes, i), bar_index + 5)
+            // Check if price is in zone
+            if low <= t and high >= b
+                if d == 1
+                    price_in_bull_ob := true
+                else
+                    price_in_bear_ob := true
+
+int active_ob_count = array.size(ob_top)
+
+// ==================== FAIR VALUE GAPS ====================
+var array<float> fvg_top = array.new_float()
+var array<float> fvg_bottom = array.new_float()
+var array<int> fvg_bar = array.new_int()
+var array<int> fvg_dir = array.new_int()  // 1=bullish, -1=bearish
+var array<box> fvg_boxes = array.new_box()
+
+// Bullish FVG: bar[2].high < bar[0].low (gap between candle 1 and candle 3)
+bool bull_fvg = high[2] < low
+// Bearish FVG: bar[2].low > bar[0].high
+bool bear_fvg = low[2] > high
+
+if bull_fvg and show_fvg
+    float gap_t = low
+    float gap_b = high[2]
+    array.push(fvg_top, gap_t)
+    array.push(fvg_bottom, gap_b)
+    array.push(fvg_bar, bar_index - 1)
+    array.push(fvg_dir, 1)
+    box fvg_box = box.new(bar_index - 2, gap_t, bar_index + 10, gap_b, border_color=color.new(#2196F3, 70), bgcolor=color.new(#2196F3, 88))
+    array.push(fvg_boxes, fvg_box)
+
+if bear_fvg and show_fvg
+    float gap_t = low[2]
+    float gap_b = high
+    array.push(fvg_top, gap_t)
+    array.push(fvg_bottom, gap_b)
+    array.push(fvg_bar, bar_index - 1)
+    array.push(fvg_dir, -1)
+    box fvg_box = box.new(bar_index - 2, gap_t, bar_index + 10, gap_b, border_color=color.new(#FF9800, 70), bgcolor=color.new(#FF9800, 88))
+    array.push(fvg_boxes, fvg_box)
+
+// Manage FVGs: fill detection, aging
+if array.size(fvg_top) > 0
+    int sz = array.size(fvg_top)
+    for i = sz - 1 to 0
+        float t = array.get(fvg_top, i)
+        float b = array.get(fvg_bottom, i)
+        int age = bar_index - array.get(fvg_bar, i)
+        int d = array.get(fvg_dir, i)
+
+        // Filled: price trades through the gap
+        float mid = (t + b) / 2
+        bool filled = (d == 1 and low <= mid) or (d == -1 and high >= mid)
+        bool too_old = age > max_fvg_age
+
+        if filled or too_old
+            box.delete(array.get(fvg_boxes, i))
+            array.remove(fvg_top, i)
+            array.remove(fvg_bottom, i)
+            array.remove(fvg_bar, i)
+            array.remove(fvg_dir, i)
+            array.remove(fvg_boxes, i)
+        else
+            box.set_right(array.get(fvg_boxes, i), bar_index + 3)
+
+int active_fvg_count = array.size(fvg_top)
+
+// ==================== NEAREST OB DISTANCE ====================
+float nearest_ob_dist = 100.0  // in ATR multiples
+if array.size(ob_top) > 0 and atr_val > 0
+    for i = 0 to array.size(ob_top) - 1
+        float mid = (array.get(ob_top, i) + array.get(ob_bottom, i)) / 2
+        float dist = math.abs(close - mid) / atr_val
+        nearest_ob_dist := math.min(nearest_ob_dist, dist)
+
+// ==================== VISUAL LABELS ====================
+if show_bos and bullish_bos
+    label.new(bar_index, low, "BOS ▲", style=label.style_label_up, color=color.new(#4CAF50, 30), textcolor=color.white, size=size.small)
+
+if show_bos and bearish_bos
+    label.new(bar_index, high, "BOS ▼", style=label.style_label_down, color=color.new(#F44336, 30), textcolor=color.white, size=size.small)
+
+if show_choch and bullish_choch
+    label.new(bar_index, low, "CHoCH ▲", style=label.style_label_up, color=color.new(#00E676, 10), textcolor=color.black, size=size.normal)
+
+if show_choch and bearish_choch
+    label.new(bar_index, high, "CHoCH ▼", style=label.style_label_down, color=color.new(#D50000, 10), textcolor=color.white, size=size.normal)
+
+// ==================== INFO TABLE ====================
+string tbl_pos = switch table_position
+    "Top Right" => position.top_right
+    "Top Left" => position.top_left
+    "Bottom Right" => position.bottom_right
+    "Bottom Left" => position.bottom_left
+    => position.top_right
+
+var table info_table = table.new(tbl_pos, 2, 7, bgcolor=color.new(color.black, 80), border_width=1)
+
+if barstate.islast
+    table.cell(info_table, 0, 0, "QSMC v2", text_color=color.white, text_size=size.small)
+    table.cell(info_table, 1, 0, "", text_size=size.small)
+
+    table.cell(info_table, 0, 1, "Structure", text_color=color.gray, text_size=size.tiny)
+    color struct_color = structure > 0 ? color.green : structure < 0 ? color.red : color.gray
+    table.cell(info_table, 1, 1, structure_name, text_color=struct_color, text_size=size.small)
+
+    table.cell(info_table, 0, 2, "Last Signal", text_color=color.gray, text_size=size.tiny)
+    color sig_color = str.contains(last_signal_text, "▲") ? color.green : str.contains(last_signal_text, "▼") ? color.red : color.gray
+    table.cell(info_table, 1, 2, last_signal_text, text_color=sig_color, text_size=size.small)
+
+    table.cell(info_table, 0, 3, "Active OBs", text_color=color.gray, text_size=size.tiny)
+    table.cell(info_table, 1, 3, str.tostring(active_ob_count), text_color=active_ob_count > 0 ? color.white : color.gray, text_size=size.small)
+
+    table.cell(info_table, 0, 4, "Active FVGs", text_color=color.gray, text_size=size.tiny)
+    table.cell(info_table, 1, 4, str.tostring(active_fvg_count), text_color=active_fvg_count > 0 ? color.white : color.gray, text_size=size.small)
+
+    table.cell(info_table, 0, 5, "Settings", text_color=color.gray, text_size=size.tiny)
+    table.cell(info_table, 1, 5, settings_mode == "Auto" ? "Auto" : "Manual", text_color=settings_mode == "Auto" ? color.lime : color.orange, text_size=size.tiny)
+
+    table.cell(info_table, 0, 6, "Params", text_color=color.gray, text_size=size.tiny)
+    table.cell(info_table, 1, 6, "Sw:" + str.tostring(swing_length) + " Str:" + str.tostring(ob_strength, "#.#"), text_color=color.gray, text_size=size.tiny)
+
+// ==================== HIDDEN PLOT EXPORTS ====================
+plot(structure, "X_QSMCStructure", display=display.none)
+plot(bos_signal, "X_QSMCBOS", display=display.none)
+plot(choch_signal, "X_QSMCCHoCH", display=display.none)
+plot(active_ob_count, "X_QSMCOBCount", display=display.none)
+plot(nearest_ob_dist, "X_QSMCNearestOB", display=display.none)
+
+// ==================== ALERTS ====================
+alertcondition(bullish_bos, "QSMC: Bullish BOS", "Break of structure — uptrend continuation")
+alertcondition(bearish_bos, "QSMC: Bearish BOS", "Break of structure — downtrend continuation")
+alertcondition(bullish_choch, "QSMC: Bullish CHoCH", "Change of character — potential reversal to uptrend")
+alertcondition(bearish_choch, "QSMC: Bearish CHoCH", "Change of character — potential reversal to downtrend")
+alertcondition(price_in_bull_ob, "QSMC: Price at Bullish OB", "Price entering bullish order block (demand zone)")
+alertcondition(price_in_bear_ob, "QSMC: Price at Bearish OB", "Price entering bearish order block (supply zone)")
+
+// ==================== WEBHOOK ALERT ====================
+bool any_alert = bullish_bos or bearish_bos or bullish_choch or bearish_choch or price_in_bull_ob or price_in_bear_ob
+
+if any_alert
+    string alert_type = bullish_choch ? "choch_bull" : bearish_choch ? "choch_bear" : bullish_bos ? "bos_bull" : bearish_bos ? "bos_bear" : price_in_bull_ob ? "ob_bull_test" : "ob_bear_test"
+    string alert_msg = '{"passphrase":"' + passphrase + '","ticker":"' + syminfo.ticker + '","timeframe":"' + timeframe.period + '","indicator":"qsmc","alert_type":"' + alert_type + '","structure":"' + structure_name + '","active_obs":' + str.tostring(active_ob_count) + ',"active_fvgs":' + str.tostring(active_fvg_count) + ',"nearest_ob_atr":' + str.tostring(nearest_ob_dist, "#.#") + ',"settings_mode":"' + settings_mode + '","swing_length":' + str.tostring(swing_length) + ',"ob_strength":' + str.tostring(ob_strength, "#.#") + ',"timestamp":"' + str.format_time(timenow, "yyyy-MM-dd'T'HH:mm:ss'Z'", "UTC") + '"}'
+    alert(alert_msg, alert.freq_once_per_bar_close)
