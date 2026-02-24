@@ -3,6 +3,7 @@ KENNY Verdicts Router — Trade verdict storage, retrieval, and stats.
 """
 
 import json
+from app.websocket.manager import ws_manager
 import logging
 from datetime import datetime, timedelta, timezone
 from typing import Optional
@@ -174,6 +175,22 @@ async def store_verdict(v: VerdictCreate):
             reason, "active"
         )
         logger.info(f"Verdict stored: {v.symbol} {v.verdict} {v.direction or ''} {v.confidence}%")
+        # Broadcast to dashboard via WebSocket
+        try:
+            await ws_manager.broadcast_verdict({
+                "symbol": v.symbol.upper(),
+                "verdict": v.verdict,
+                "direction": v.direction,
+                "confidence": v.confidence,
+                "entry": v.entry_price,
+                "target": target,
+                "stop": stop,
+                "riskReward": rr,
+                "timeframeAlignment": tf_align or {},
+                "reason": reason,
+            })
+        except Exception as ws_err:
+            logger.debug(f"WS broadcast failed: {ws_err}")
         return {"status": "stored"}
     except Exception as e:
         logger.error(f"Verdict store error: {e}")

@@ -128,12 +128,12 @@ class VerdictConfig:
     """Tunable parameters for verdict generation."""
     # Anchor requirements
     anchor_tf: str = "15min"                # Primary timeframe
-    anchor_min_confidence: float = 65.0     # Minimum confidence on anchor
+    anchor_min_confidence: float = 75.0     # Minimum confidence on anchor
     
     # Confirmation requirements
     confirming_tfs: List[str] = field(default_factory=lambda: ["1min", "5min"])
-    min_confirming: int = 1                 # At least 1 confirming TF
-    confirming_min_confidence: float = 55.0 # Min confidence for confirming TFs
+    min_confirming: int = 2                 # At least 1 confirming TF
+    confirming_min_confidence: float = 65.0 # Min confidence for confirming TFs
     
     # Boost
     boost_tf: str = "1hr"                   # If this agrees, boost confidence
@@ -158,7 +158,7 @@ class VerdictConfig:
     prediction_max_age_sec: float = 120.0   # Ignore predictions older than 2min
     
     # Overall GO threshold
-    min_go_confidence: float = 70.0         # Final confidence must be >= this
+    min_go_confidence: float = 78.0         # Final confidence must be >= this
 
 
 # ============================================================================
