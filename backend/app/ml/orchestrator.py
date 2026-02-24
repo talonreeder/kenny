@@ -22,8 +22,8 @@ import numpy as np
 import requests
 import websockets
 
-from feature_engine import FeatureEngine, OHLCVBar, HTF_DROPS
-from verdict_engine import VerdictEngine, VerdictConfig, Prediction
+from app.ml.feature_engine import FeatureEngine, OHLCVBar, HTF_DROPS
+from app.ml.verdict_engine import VerdictEngine, VerdictConfig, Prediction
 
 # ============================================================================
 # CONFIGURATION

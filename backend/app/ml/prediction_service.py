@@ -27,7 +27,7 @@ import numpy as np
 from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel, Field
 
-from model_manager import (
+from app.ml.model_manager import (
     ModelManager, init_model_manager, get_model_manager,
     EnsemblePrediction, CrossTFPrediction, ModelPrediction
 )

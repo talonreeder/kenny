@@ -33,7 +33,7 @@ import requests
 # Add this directory so we can import feature_engine
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from feature_engine import FeatureEngine, OHLCVBar
+from app.ml.feature_engine import FeatureEngine, OHLCVBar
 
 logger = logging.getLogger("yelena.backfill_predictions")
 
