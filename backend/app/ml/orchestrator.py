@@ -1,10 +1,10 @@
 """
-YELENA v2 — Real-Time Trading Orchestrator
-Connects Polygon.io → Feature Engine → Prediction Service → Verdict Engine.
+KENNY — Real-Time Trading Orchestrator
+Connects Data Source → Feature Engine → ModelManager (in-process) → Verdict Engine.
 
 The orchestrator feeds raw ML predictions into the Verdict Engine,
 which consolidates multi-timeframe signals into GO/SKIP trade verdicts.
-Only actionable verdicts are pushed to the dashboard.
+Only actionable verdicts are pushed to the dashboard via WebSocket.
 """
 
 import os
@@ -24,27 +24,35 @@ import websockets
 
 from app.ml.feature_engine import FeatureEngine, OHLCVBar, HTF_DROPS
 from app.ml.verdict_engine import VerdictEngine, VerdictConfig, Prediction
+from app.ml.model_manager import ModelManager
 
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
 
-logger = logging.getLogger("yelena.orchestrator")
+logger = logging.getLogger("kenny.orchestrator")
+
 
 @dataclass
 class OrchestratorConfig:
-    symbols: List[str] = field(default_factory=lambda: ["SPY", "QQQ"])
+    symbols: List[str] = field(default_factory=lambda: [
+        "SPY", "QQQ", "TSLA", "NVDA", "META",
+        "AAPL", "GOOGL", "MSFT", "AMZN", "AMD", "NFLX"
+    ])
     timeframes: List[str] = field(default_factory=lambda: ["1min", "5min", "15min", "1hr"])
+    model_dir: str = "/home/ubuntu/kenny/backend/models"
     polygon_api_key: str = ""
-    predict_url: str = "http://localhost:8001"
     backend_url: str = "http://localhost:8000"
     warmup_bars: int = 300
     log_level: str = "INFO"
+    sequence_length: int = 20  # Bars for Transformer/CNN sequence
 
+    # WebSocket data source (Polygon for now, Schwab in Phase 4+)
     ws_url: str = "wss://delayed.polygon.io/stocks"
     ws_reconnect_delay: float = 5.0
     ws_max_reconnects: int = 10
 
+    # Market hours (ET)
     market_open_hour: int = 9
     market_open_minute: int = 30
     market_close_hour: int = 16
@@ -60,6 +68,8 @@ TF_AGGREGATE = {"5min": 5, "15min": 15, "1hr": 60}
 # ============================================================================
 
 class BarAggregator:
+    """Aggregates 1-minute bars into higher timeframes (5min, 15min, 1hr)."""
+
     def __init__(self):
         self.state: Dict[str, Dict[str, dict]] = {}
 
@@ -105,7 +115,16 @@ class Orchestrator:
         self.feature_engine = FeatureEngine(max_bars=500)
         self.aggregator = BarAggregator()
         self.verdict_engine = VerdictEngine(VerdictConfig())
-        self.verdict_engine.tv_api_url = config.backend_url  # For TV confluence lookups
+        self.verdict_engine.tv_api_url = config.backend_url
+
+        # In-process ML inference — no HTTP prediction service needed
+        self.model_manager = ModelManager(config.model_dir)
+        load_result = self.model_manager.load_all()
+        logger.info(
+            f"ModelManager loaded: {load_result['total_models']} models "
+            f"in {load_result['total_time_ms']:.0f}ms"
+        )
+
         self.running = False
         self.ws = None
 
@@ -123,6 +142,7 @@ class Orchestrator:
     # ----------------------------------------------------------------
 
     def warmup(self):
+        """Fetch historical bars to warm up feature engine."""
         logger.info(f"Warming up {len(self.config.symbols)} symbols...")
         for symbol in self.config.symbols:
             self.aggregator.init_symbol(symbol)
@@ -136,6 +156,7 @@ class Orchestrator:
                 logger.info(f"  {status} {symbol} {tf}: {count} bars {'(ready)' if ready else '(warming up)'}")
 
     def _fetch_historical(self, symbol: str):
+        """Fetch historical 1min bars from Polygon for warmup."""
         api_key = self.config.polygon_api_key
         if not api_key:
             logger.warning(f"No Polygon API key for {symbol}")
@@ -191,10 +212,11 @@ class Orchestrator:
             logger.error(f"Failed to fetch historical data for {symbol}: {e}")
 
     # ----------------------------------------------------------------
-    # WEBSOCKET
+    # WEBSOCKET — Real-time data feed
     # ----------------------------------------------------------------
 
     async def run(self):
+        """Main orchestrator loop — connect WS, process bars, generate verdicts."""
         self.running = True
         self.start_time = time.time()
         self.warmup()
@@ -218,7 +240,10 @@ class Orchestrator:
                 logger.info("Reconnecting after long session...")
             else:
                 reconnects += 1
-                logger.warning(f"Short connection ({conn_duration:.0f}s), reconnect {reconnects}/{self.config.ws_max_reconnects}")
+                logger.warning(
+                    f"Short connection ({conn_duration:.0f}s), "
+                    f"reconnect {reconnects}/{self.config.ws_max_reconnects}"
+                )
 
             if self.running:
                 delay = min(self.config.ws_reconnect_delay * reconnects, 30)
@@ -243,6 +268,7 @@ class Orchestrator:
                 await asyncio.sleep(10)
 
     async def _ws_connect(self):
+        """Connect to Polygon WebSocket for real-time 1min bars."""
         logger.info("Connecting to Polygon WebSocket...")
 
         async with websockets.connect(
@@ -250,6 +276,7 @@ class Orchestrator:
         ) as ws:
             self.ws = ws
 
+            # Authenticate
             auth_msg = json.dumps({"action": "auth", "params": self.config.polygon_api_key})
             await ws.send(auth_msg)
 
@@ -275,6 +302,7 @@ class Orchestrator:
                 logger.error("Did not receive auth_success")
                 return
 
+            # Subscribe to minute aggregates
             subs = ",".join([f"AM.{s}" for s in self.config.symbols])
             sub_msg = json.dumps({"action": "subscribe", "params": subs})
             await ws.send(sub_msg)
@@ -292,6 +320,7 @@ class Orchestrator:
 
             logger.info("Listening for bars... (delayed data, first bar may take ~60s)")
 
+            # Main message loop
             bar_count = 0
             async for message in ws:
                 if not self.running:
@@ -312,6 +341,10 @@ class Orchestrator:
 
             logger.info(f"WebSocket loop ended after {bar_count} bars")
 
+    # ----------------------------------------------------------------
+    # EVENT HANDLING
+    # ----------------------------------------------------------------
+
     async def _handle_event(self, event: dict):
         ev_type = event.get("ev")
         if ev_type in ("A", "AM"):
@@ -320,6 +353,7 @@ class Orchestrator:
             logger.debug(f"Status: {event.get('message', '')}")
 
     async def _handle_minute_bar(self, event: dict):
+        """Process a 1-minute bar: update features, aggregate, predict."""
         symbol = event.get("sym", "")
         if symbol not in self.config.symbols:
             return
@@ -333,9 +367,10 @@ class Orchestrator:
         self.bars_received += 1
         self.feature_engine.update_bar(symbol, "1min", bar)
 
-        # Feed price data to verdict engine
+        # Feed price data to verdict engine for ATR calculation
         self.verdict_engine.update_price(symbol, bar.close, bar.high, bar.low)
 
+        # Aggregate into higher timeframes
         completed = self.aggregator.add_1min_bar(symbol, bar)
         for tf, agg_bar in completed.items():
             if agg_bar is not None:
@@ -343,78 +378,100 @@ class Orchestrator:
                 if self.feature_engine.has_enough_bars(symbol, tf):
                     self.feature_engine.compute_htf_summary(symbol, tf)
 
+        # Determine which timeframes to predict
         tfs_to_predict = ["1min"]
         for tf, agg_bar in completed.items():
             if agg_bar is not None:
                 tfs_to_predict.append(tf)
 
+        # Run predictions for ready timeframes
         for tf in tfs_to_predict:
             if self.feature_engine.has_enough_bars(symbol, tf):
                 await self._run_prediction(symbol, tf)
 
     # ----------------------------------------------------------------
-    # PREDICTION → VERDICT
+    # PREDICTION → VERDICT (In-Process via ModelManager)
     # ----------------------------------------------------------------
 
     async def _run_prediction(self, symbol: str, timeframe: str):
+        """Run ML prediction in-process via ModelManager — no HTTP calls."""
         try:
             t0 = time.time()
+
+            # Compute features from streaming feature engine
             features, feature_names = self.feature_engine.compute_features(symbol, timeframe)
-            sequence = self.feature_engine.get_sequence(symbol, timeframe, seq_len=30)
+            sequence = self.feature_engine.get_sequence(
+                symbol, timeframe, seq_len=self.config.sequence_length
+            )
             feature_ms = (time.time() - t0) * 1000
 
-            payload = {
-                "symbol": symbol,
-                "timeframe": timeframe,
-                "features": features.tolist(),
-                "feature_names": feature_names,
-            }
-            if sequence is not None:
-                payload["sequence"] = sequence.tolist()
+            # Filter features to match this timeframe's expected set
+            expected_names = self.model_manager.tf_metadata.get(timeframe, {}).get('feature_names')
+            if expected_names and feature_names:
+                name_to_idx = {name: i for i, name in enumerate(feature_names)}
+                indices = [name_to_idx[fn] for fn in expected_names if fn in name_to_idx]
+                if len(indices) != len(expected_names):
+                    # Fill missing features with 0.0
+                    full_map = {name: features[name_to_idx[name]] if name in name_to_idx else 0.0
+                               for name in expected_names}
+                    features = np.array([full_map[n] for n in expected_names], dtype=np.float32)
+                else:
+                    features = features[indices]
+                if sequence is not None:
+                    try:
+                        seq_indices = [name_to_idx[fn] for fn in expected_names if fn in name_to_idx]
+                        sequence = sequence[:, seq_indices]
+                    except (IndexError, KeyError):
+                        sequence = None
+                feature_names = list(expected_names)
 
+            # Run in-process prediction (all 8 models per timeframe)
             t1 = time.time()
-            resp = requests.post(f"{self.config.predict_url}/predict", json=payload, timeout=5)
+            result = self.model_manager.predict(
+                symbol, timeframe, features,
+                sequence=sequence,
+                feature_names=feature_names
+            )
             predict_ms = (time.time() - t1) * 1000
             total_ms = (time.time() - t0) * 1000
 
-            if resp.status_code != 200:
-                logger.error(f"Prediction failed for {symbol} {timeframe}: {resp.text[:200]}")
-                return
-
-            result = resp.json()
             self.predictions_made += 1
 
+            # Cache latest prediction
             if symbol not in self.last_prediction:
                 self.last_prediction[symbol] = {}
-            self.last_prediction[symbol][timeframe] = result
-
-            direction = result["direction"]
-            probability = result["probability"]
-            confidence = result["confidence"]
-            grade = result["grade"]
-            unanimous = result.get("unanimous", False)
+            self.last_prediction[symbol][timeframe] = {
+                "direction": result.direction,
+                "probability": result.probability,
+                "confidence": result.confidence,
+                "grade": result.grade,
+                "models_agreeing": result.models_agreeing,
+                "unanimous": result.unanimous,
+            }
 
             # Log raw prediction
-            if direction != "HOLD":
-                emoji = "🟢" if direction == "CALL" else "🔴"
+            if result.direction != "HOLD":
+                emoji = "🟢" if result.direction == "CALL" else "🔴"
                 logger.info(
-                    f"{emoji} {symbol} {timeframe} {direction} "
-                    f"{probability:.1f}% [{grade}] "
-                    f"agree={result.get('models_agreeing', 0)}/3 "
-                    f"[{total_ms:.0f}ms]"
+                    f"{emoji} {symbol} {timeframe} {result.direction} "
+                    f"{result.probability:.1f}% [{result.grade}] "
+                    f"agree={result.models_agreeing}/4 "
+                    f"[feat:{feature_ms:.0f}ms pred:{predict_ms:.0f}ms total:{total_ms:.0f}ms]"
                 )
 
-            # ── Feed to Verdict Engine ──
+            # Feed to Verdict Engine
             pred = Prediction(
                 symbol=symbol,
                 timeframe=timeframe,
-                direction=direction,
-                probability=probability,
-                confidence=confidence,
-                grade=grade,
-                models_agreeing=result.get("models_agreeing", 0),
-                unanimous=unanimous,
-                individual=result.get("individual", {}),
+                direction=result.direction,
+                probability=result.probability,
+                confidence=result.confidence,
+                grade=result.grade,
+                models_agreeing=result.models_agreeing,
+                unanimous=result.unanimous,
+                individual={k: {"direction": v.direction, "probability": v.probability,
+                               "confidence": v.confidence, "signal": v.signal}
+                           for k, v in result.individual.items()},
                 timestamp=time.time(),
                 feature_ms=feature_ms,
                 predict_ms=predict_ms,
@@ -426,10 +483,14 @@ class Orchestrator:
                 await self._push_verdict_to_backend(verdict)
 
         except Exception as e:
-            logger.error(f"Prediction error {symbol} {timeframe}: {e}")
+            logger.error(f"Prediction error {symbol} {timeframe}: {e}", exc_info=True)
+
+    # ----------------------------------------------------------------
+    # VERDICT DELIVERY
+    # ----------------------------------------------------------------
 
     async def _push_verdict_to_backend(self, verdict):
-        """Push verdict to backend API for dashboard delivery."""
+        """Push verdict to backend API for storage and dashboard broadcast."""
         try:
             resp = requests.post(
                 f"{self.config.backend_url}/api/verdicts",
@@ -457,9 +518,11 @@ class Orchestrator:
             "uptime_seconds": round(uptime, 1),
             "bars_received": self.bars_received,
             "predictions_made": self.predictions_made,
+            "models_loaded": self.model_manager.model_count,
             "verdict_stats": self.verdict_engine.get_stats(),
             "active_verdicts": self.verdict_engine.get_active_verdicts(),
             "symbols": self.config.symbols,
+            "timeframes": self.config.timeframes,
         }
 
     def shutdown(self):
@@ -477,14 +540,19 @@ class Orchestrator:
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(description="YELENA v2 Real-Time Orchestrator")
-    parser.add_argument("--symbols", default=os.getenv("YELENA_SYMBOLS", "SPY,QQQ"),
+    parser = argparse.ArgumentParser(description="KENNY Real-Time Orchestrator")
+    parser.add_argument("--symbols",
+                        default=os.getenv("KENNY_SYMBOLS",
+                            "SPY,QQQ,TSLA,NVDA,META,AAPL,GOOGL,MSFT,AMZN,AMD,NFLX"),
                         help="Comma-separated symbols")
-    parser.add_argument("--polygon-key", default=os.getenv("POLYGON_API_KEY", ""),
+    parser.add_argument("--polygon-key",
+                        default=os.getenv("POLYGON_API_KEY", ""),
                         help="Polygon.io API key")
-    parser.add_argument("--predict-url", default=os.getenv("YELENA_PREDICT_URL", "http://localhost:8001"),
-                        help="Prediction service URL")
-    parser.add_argument("--log-level", default=os.getenv("YELENA_LOG_LEVEL", "INFO"),
+    parser.add_argument("--model-dir",
+                        default=os.getenv("KENNY_MODEL_DIR", "/home/ubuntu/kenny/backend/models"),
+                        help="Path to ML model directory")
+    parser.add_argument("--log-level",
+                        default=os.getenv("KENNY_LOG_LEVEL", "INFO"),
                         help="Logging level")
     parser.add_argument("--warmup-only", action="store_true",
                         help="Only fetch historical data, don't connect WebSocket")
@@ -499,15 +567,15 @@ def main():
     config = OrchestratorConfig(
         symbols=[s.strip().upper() for s in args.symbols.split(",")],
         polygon_api_key=args.polygon_key,
-        predict_url=args.predict_url,
-        log_level=args.log_level
+        model_dir=args.model_dir,
+        log_level=args.log_level,
     )
 
     logger.info("=" * 60)
-    logger.info("YELENA v2 Real-Time Orchestrator + Verdict Engine")
+    logger.info("KENNY — Real-Time Orchestrator + Verdict Engine")
     logger.info(f"  Symbols: {config.symbols}")
     logger.info(f"  Timeframes: {config.timeframes}")
-    logger.info(f"  Predict URL: {config.predict_url}")
+    logger.info(f"  Model dir: {config.model_dir}")
     logger.info(f"  Polygon key: {'✅ set' if config.polygon_api_key else '❌ missing'}")
     logger.info(f"  Verdict: 15min anchor + 1 confirming TF, min 70% confidence")
     logger.info("=" * 60)
@@ -522,7 +590,7 @@ def main():
     if args.warmup_only:
         orchestrator.warmup()
         status = orchestrator.status()
-        logger.info(f"Warmup complete.")
+        logger.info(f"Warmup complete. Models loaded: {status['models_loaded']}")
         return
 
     asyncio.run(orchestrator.run())
