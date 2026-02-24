@@ -1,7 +1,5 @@
-import YelenaDashboard from './components/YelenaDashboard'
-
+import KennyDashboard from './components/KennyDashboard'
 function App() {
-  return <YelenaDashboard />
+  return <KennyDashboard />
 }
-
 export default App
