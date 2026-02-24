@@ -699,7 +699,6 @@ class FeatureEngine:
         ema20 = c.ewm(span=20, adjust=False).mean()
         kelt_upper = ema20 + 1.5 * atr
         kelt_lower = ema20 - 1.5 * atr
-        squeeze = float((bb_lower > kelt_lower) & (bb_upper < kelt_upper)).real
         squeeze = float(((bb_lower > kelt_lower) & (bb_upper < kelt_upper)).iloc[-1])
 
         # Candle direction
