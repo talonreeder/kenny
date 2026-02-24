@@ -209,3 +209,48 @@ async def latest_tv_signals(symbol: Optional[str] = None):
 @router.get("/tv-alert/health")
 async def tv_alert_health():
     return {"status": "ready", "store": tv_alert_store.stats}
+
+@router.get("/tv-alerts/confluence/{symbol}")
+async def tv_confluence(symbol: str):
+    """Aggregate TV signals into a single confluence verdict for the verdict engine."""
+    symbol = symbol.upper()
+    signals = tv_alert_store.get_multi_tf_confluence(symbol)
+    
+    active = {tf: s for tf, s in signals.items() if s is not None}
+    if not active:
+        return {"symbol": symbol, "direction": "HOLD", "score": 0, "signals": 0}
+    
+    # Aggregate: count CALL vs PUT, weighted by score
+    call_score = 0.0
+    put_score = 0.0
+    call_count = 0
+    put_count = 0
+    
+    for tf, s in active.items():
+        freshness = tv_alert_store.get_freshness(s.symbol, tf) or 0.5
+        weighted = s.score * freshness
+        if s.direction == "CALL":
+            call_score += weighted
+            call_count += 1
+        elif s.direction == "PUT":
+            put_score += weighted
+            put_count += 1
+    
+    total_signals = call_count + put_count
+    if call_score > put_score:
+        direction = "CALL"
+        score = call_score / max(call_count, 1)
+    elif put_score > call_score:
+        direction = "PUT"
+        score = put_score / max(put_count, 1)
+    else:
+        direction = "HOLD"
+        score = 0
+    
+    return {
+        "symbol": symbol,
+        "direction": direction,
+        "score": round(score, 1),
+        "signals": total_signals,
+        "breakdown": {tf: {"direction": s.direction, "score": s.score, "grade": s.grade} for tf, s in active.items()}
+    }
