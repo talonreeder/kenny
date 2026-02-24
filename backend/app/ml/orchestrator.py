@@ -492,9 +492,34 @@ class Orchestrator:
     async def _push_verdict_to_backend(self, verdict):
         """Push verdict to backend API for storage and dashboard broadcast."""
         try:
+            d = verdict.to_dict()
+            payload = {
+                "symbol": d.get("symbol", ""),
+                "verdict": d.get("verdict", ""),
+                "direction": d.get("direction"),
+                "confidence": d.get("confidence"),
+                "entry_price": d.get("entry"),
+                "stop_price": d.get("stop"),
+                "target_price": d.get("target"),
+                                                "ml_agreement": f"{d.get('modelsAgreeing', 0)}/4",
+                "tf_alignment": json.dumps(d.get("timeframeAlignment", {})),
+                                                                                "reasoning": {
+                    "reason": d.get("reason", ""),
+                    "anchor_tf": d.get("anchorTf"),
+                    "confirming_tfs": d.get("confirmingTfs", []),
+                    "risk_reward": d.get("riskReward"),
+                },
+                "quality_signals": {
+                    "tf_confidences": d.get("tfConfidences", {}),
+                },
+                "metadata": {
+                    "status": d.get("status"),
+                    "timestamp": d.get("timestamp"),
+                },
+            }
             resp = requests.post(
                 f"{self.config.backend_url}/api/verdicts",
-                json=verdict.to_dict(),
+                json=payload,
                 timeout=3
             )
             if resp.status_code == 200:

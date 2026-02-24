@@ -482,9 +482,9 @@ function VCard({ v, isActive }) {
         </div>
         {go && (
           <div className="v-plan">
-            <div className="v-plan-item"><div className="v-plan-label">Entry</div><div className="v-plan-val entry">${v.entry}</div></div>
-            <div className="v-plan-item"><div className="v-plan-label">Target</div><div className="v-plan-val tp">${v.target}</div></div>
-            <div className="v-plan-item"><div className="v-plan-label">Stop</div><div className="v-plan-val sl">${v.stop}</div></div>
+            <div className="v-plan-item"><div className="v-plan-label">Entry</div><div className="v-plan-val entry">${Number(v.entry).toFixed(2)}</div></div>
+            <div className="v-plan-item"><div className="v-plan-label">Target</div><div className="v-plan-val tp">${Number(v.target).toFixed(2)}</div></div>
+            <div className="v-plan-item"><div className="v-plan-label">Stop</div><div className="v-plan-val sl">${Number(v.stop).toFixed(2)}</div></div>
             <div className="v-plan-item"><div className="v-plan-label">R:R</div><div className="v-plan-val rr">{v.riskReward || v.risk_reward}</div></div>
           </div>
         )}
