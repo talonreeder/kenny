@@ -80,7 +80,7 @@ export default function KennyDashboard() {
   const dbOk = health?.components?.database?.status === "healthy";
   const mlOk = health?.components?.ml_models?.status && health.components.ml_models.status !== "not_loaded";
 
-  const filteredActive = selectedSym ? active.filter(v => v.symbol === selectedSym) : active;
+  const filteredActive = (selectedSym ? active.filter(v => v.symbol === selectedSym) : active).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
   const filteredHistory = selectedSym ? history.filter(v => v.symbol === selectedSym) : history;
 
   return (

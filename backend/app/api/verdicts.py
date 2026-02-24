@@ -103,7 +103,7 @@ async def list_verdicts(
 
 @router.get("/verdicts/latest")
 async def latest_verdicts(symbol: Optional[str] = Query(None)):
-    query = "SELECT DISTINCT ON (symbol) * FROM verdicts WHERE time > NOW() - INTERVAL '4 hours'"
+    query = "SELECT * FROM (SELECT DISTINCT ON (symbol) * FROM verdicts WHERE time > NOW() - INTERVAL '4 hours' ORDER BY symbol, time DESC) sub ORDER BY time DESC"
     params = []
     if symbol:
         query += " AND symbol = $1"
